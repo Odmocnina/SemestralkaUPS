@@ -8,9 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class OknoLogin extends JPanel {
+public class OknoLobby extends JPanel {
 
-    public OknoLogin(Okno okno) {
+    public OknoLobby(Okno okno) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
         setBackground(Konstanty.BARVA_POZADI);
@@ -20,43 +20,11 @@ public class OknoLogin extends JPanel {
         hraniceMrize.fill = GridBagConstraints.BOTH;
         hraniceMrize.anchor = GridBagConstraints.WEST;
 
-        // Přidání popisku pro jméno
-        JLabel jmenoLabel = new JLabel("Jméno:");
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 0;
-        add(jmenoLabel, hraniceMrize);
-
-        // Přidání textového pole pro zadání jména
-        JTextField jmenoTextField = new JTextField(15);
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 0;
-        add(jmenoTextField, hraniceMrize);
-
-        JLabel ipLabel = new JLabel("ip:");
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 1;
-        add(ipLabel, hraniceMrize);
-
-        JTextField ipTextField = new JTextField(15);
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 1;
-        add(ipTextField, hraniceMrize);
-
-        JLabel portLabel = new JLabel("port:");
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 2;
-        add(portLabel, hraniceMrize);
-
-        JTextField portTextField = new JTextField(15);
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 2;
-        add(portTextField, hraniceMrize);
-
         // Přidání tlačítka pro potvrzení
-        JButton potvrditButton = new JButton("Potvrdit");
+        JButton vytvoreniHryButton = new JButton("Vytvořit hru");
         hraniceMrize.gridx = 1;
         hraniceMrize.gridy = 3;
-        add(potvrditButton, hraniceMrize);
+        add(vytvoreniHryButton, hraniceMrize);
 
         // Přidání prázdného sloupce napravo, aby se komponenty netáhly
         hraniceMrize.gridx = 2;
@@ -64,11 +32,11 @@ public class OknoLogin extends JPanel {
         hraniceMrize.weightx = 1;  // Prázdný prostor pro roztažení
         add(Box.createHorizontalStrut(1), hraniceMrize);
 
-        potvrditButton.addActionListener(new ActionListener() {
+        vytvoreniHryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
-                okno.zobrazHru("Lobby");
+                okno.zobrazHru("Hra");
             }
         });
 
@@ -84,3 +52,4 @@ public class OknoLogin extends JPanel {
     }
 
 }
+

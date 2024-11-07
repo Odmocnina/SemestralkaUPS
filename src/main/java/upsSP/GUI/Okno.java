@@ -1,7 +1,13 @@
 package upsSP.GUI;
 
+import upsSP.Nastroje.Konstanty;
+import upsSP.VolbyTahu.IVolba;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Random;
 
 import static upsSP.Nastroje.Konstanty.*;
 
@@ -13,22 +19,20 @@ public class Okno extends JFrame {
         seznamStranek = new CardLayout();
         hlavniOkno = new JPanel(seznamStranek);
         OknoLogin login = new OknoLogin(this);
-        OknoHra hra = new OknoHra();
+        OknoLobby lobby = new OknoLobby(this);
+        OknoHra hra = new OknoHra(this);
+        OknoZhodnoceniHry zhodnoceniHry = new OknoZhodnoceniHry(this);
 
         hlavniOkno.add("Login", login);
+        hlavniOkno.add("Lobby", lobby);
         hlavniOkno.add("Hra", hra);
-
-//        mainPanel.add(new LoginPanel(this), "Login");
-//        mainPanel.add(new LobbyPanel(), "Lobby");
-//        mainPanel.add(new QueuePanel(), "Queue");
-//        mainPanel.add(new GamePanel(), "Game");
+        hlavniOkno.add("ZhodnoceniHry", zhodnoceniHry);
 
         add(hlavniOkno);
         setTitle("Kamen nuzky papir");
         setSize(SIRKA_OKNA, VYSKA_OKNA);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
     }
 
     public void zobrazHru(String sceneName) {
