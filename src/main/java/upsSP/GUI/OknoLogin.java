@@ -2,11 +2,13 @@ package upsSP.GUI;
 
 import upsSP.Nastroje.Konstanty;
 import upsSP.Nastroje.NacitacTextur;
+import upsSP.Server.Spojeni;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class OknoLogin extends JPanel {
 
@@ -68,7 +70,14 @@ public class OknoLogin extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
-                okno.zobrazHru("Lobby");
+                try {
+                    Spojeni spoj = Spojeni.getInstance();
+                    String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + "\n");
+                    System.out.println(responce);
+                    okno.zobrazHru("Lobby");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

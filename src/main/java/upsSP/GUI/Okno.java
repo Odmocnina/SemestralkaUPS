@@ -22,9 +22,11 @@ public class Okno extends JFrame {
         OknoLobby lobby = new OknoLobby(this);
         OknoHra hra = new OknoHra(this);
         OknoZhodnoceniHry zhodnoceniHry = new OknoZhodnoceniHry(this);
+        OknoCekani cekani = new OknoCekani(this);
 
         hlavniOkno.add("Login", login);
         hlavniOkno.add("Lobby", lobby);
+        hlavniOkno.add("Cekani", cekani);
         hlavniOkno.add("Hra", hra);
         hlavniOkno.add("ZhodnoceniHry", zhodnoceniHry);
 
