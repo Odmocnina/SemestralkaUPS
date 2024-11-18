@@ -2,21 +2,21 @@ package upsSP.VolbyTahu;
 
 import upsSP.Nastroje.Konstanty;
 
-public class Spock implements ITurn {
+public class Scissors implements ITurn {
 
-    public Spock() {
+    public Scissors() {
 
     }
 
     public String getNameOfTurn() {
-        return "Spock";
+        return "Nůžky";
     }
 
     public String getNameOfPictureFile() {
-        return "Spock.png";
+        return "Nuzky.png";
     }
 
     public int getValue() {
-        return Konstanty.HODNOTA_SPOCK;
+        return Konstanty.HODNOTA_NUZKY;
     }
 }

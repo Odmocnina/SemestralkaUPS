@@ -1,8 +1,7 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Konstanty;
-import upsSP.Nastroje.NacitacTextur;
-import upsSP.Server.Spojeni;
+import upsSP.Server.Connection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class OknoLogin extends JPanel {
+public class LoginWindow extends JPanel {
 
-    public OknoLogin(Okno okno) {
+    public LoginWindow(Window okno) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
         setBackground(Konstanty.BARVA_POZADI);
@@ -71,10 +70,11 @@ public class OknoLogin extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
                 try {
-                    Spojeni spoj = Spojeni.getInstance();
-                    String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + "\n");
-                    System.out.println(responce);
-                    okno.zobrazHru("Lobby");
+                    Connection spoj = Connection.getInstance();
+                    spoj.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
+                    String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + ":\n");
+                    System.out.println("Odpoved serveru: " + responce);
+                    okno.zobrazHru("Cekani");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

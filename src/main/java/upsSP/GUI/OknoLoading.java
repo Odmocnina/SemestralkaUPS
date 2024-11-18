@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class OknoLoading extends JPanel {
 
-    public OknoLoading(Okno okno) {
+    public OknoLoading(Window okno) {
         // Nastavení layoutu
         setLayout(new BorderLayout());
 

@@ -11,7 +11,7 @@ public class OknoZhodnoceniHry extends JPanel {
 
     static JLabel volbaLabel, volbaProtivnikaLabel, vysledekKolaLabel, vysledekHryLabel;
 
-    public OknoZhodnoceniHry(Okno okno) {
+    public OknoZhodnoceniHry(Window okno) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
         setBackground(Konstanty.BARVA_POZADI);

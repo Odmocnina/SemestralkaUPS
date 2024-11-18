@@ -7,28 +7,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class OknoHra extends JPanel {
+public class GameWindow extends JPanel {
 
     int hodnota = -10;
 
-    IVolba[] volby = new IVolba[Konstanty.POCET_MOZNOSTI + 1];
+    ITurn[] volby = new ITurn[Konstanty.POCET_MOZNOSTI + 1];
 
     int pocetOdehranychKol = 0;
 
     JLabel koloLabel, stavLabel;
 
-    public OknoHra(Okno okno) {
-        IVolba kamen = new Kamen();
+    public GameWindow(Window okno) {
+        ITurn kamen = new Stone();
         volby[0] = kamen;
-        IVolba nuzky = new Nuzky();
+        ITurn nuzky = new Scissors();
         volby[1] = nuzky;
-        IVolba papir = new Papir();
+        ITurn papir = new Paper();
         volby[2] = papir;
-        IVolba tapir = new Tapir();
+        ITurn tapir = new Lizard();
         volby[3] = tapir;
-        IVolba spock = new Spock();
+        ITurn spock = new Spock();
         volby[4] = spock;
-        IVolba nahoda = new Nahoda();
+        ITurn nahoda = new Mandom();
         volby[5] = nahoda;
         setBackground(Konstanty.BARVA_POZADI);
 
@@ -79,11 +79,11 @@ public class OknoHra extends JPanel {
         pridaniTlacitka(hraniceMrize, 2, 2, nahoda, okno);
     }
 
-    private void pridaniTlacitka(GridBagConstraints mriz, int x, int y, IVolba volba, Okno okno) {
+    private void pridaniTlacitka(GridBagConstraints mriz, int x, int y, ITurn volba, Window okno) {
         // První řádek tlačítek (gridx = 0, 1, 2 pro tři sloupce)
-        JButton tlacitko = new JButton(volba.ziskejNazev());
+        JButton tlacitko = new JButton(volba.getNameOfTurn());
 
-        ImageIcon obrazek = new ImageIcon(Konstanty.CESTA_DO_DATA + volba.ziskejNazevSoubor());
+        ImageIcon obrazek = new ImageIcon(Konstanty.CESTA_DO_DATA + volba.getNameOfPictureFile());
         // Změna velikosti ikony
         Image img = obrazek.getImage();
         Image newimg = img.getScaledInstance((int)(Konstanty.VELIKOST_OBRAZKU),
@@ -99,7 +99,7 @@ public class OknoHra extends JPanel {
         tlacitko.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hodnota = volba.ziskejHodnotu();
+                hodnota = volba.getValue();
                 pridejKolo();
                 aktualizujLably();
                 OknoZhodnoceniHry.aktualizujLably(hodnota);

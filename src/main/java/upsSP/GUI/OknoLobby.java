@@ -1,8 +1,7 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Konstanty;
-import upsSP.Nastroje.NacitacTextur;
-import upsSP.Server.Spojeni;
+import upsSP.Server.Connection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +11,7 @@ import java.io.IOException;
 
 public class OknoLobby extends JPanel {
 
-    public OknoLobby(Okno okno) {
+    public OknoLobby(Window okno) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
         setBackground(Konstanty.BARVA_POZADI);
@@ -39,7 +38,7 @@ public class OknoLobby extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Spojeni spoj = Spojeni.getInstance();
+                    Connection spoj = Connection.getInstance();
                     String responce = spoj.sendMessage("Mess:createLobby:\n");
                     System.out.println(responce);
                     okno.zobrazHru("Cekani");
