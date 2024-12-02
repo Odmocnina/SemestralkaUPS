@@ -1,8 +1,5 @@
 package upsSP.Server;
 
-import lombok.Setter;
-import upsSP.GUI.OknoCekani;
-
 import java.io.*;
 import java.net.*;
 
