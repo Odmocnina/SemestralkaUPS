@@ -1,5 +1,8 @@
 package upsSP.Server;
 
+import lombok.Setter;
+import upsSP.GUI.OknoCekani;
+
 import java.io.*;
 import java.net.*;
 
@@ -10,8 +13,11 @@ public class Connection {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean isLisening = false; //posloucham
+    private Thread lisenThread;
 
     public int clientId;
+    private IListenerInQueue listenerÍnQueue;
 
     // Soukromý konstruktor
     private Connection() {
@@ -29,12 +35,24 @@ public class Connection {
     public String sendMessage(String message) throws IOException {
         out.println(message);
         out.flush();
-        return in.readLine(); // čeká na odpověď od serveru
+        /*if (in != null) {
+            String messageRecieved = in.readLine();
+            if (messageRecieved != null) {
+                return messageRecieved;
+            }
+        }
+        System.out.println("Server didn't respond");*/
+        return null;
+    }
+
+    public String acceptMessage() throws IOException {
+        return in.readLine();
     }
 
     // Metoda pro uzavření spojení
     public void closeConnection() {
         try {
+            stopLisening();
             if (in != null) {
                 in.close();
             }
@@ -63,5 +81,39 @@ public class Connection {
         this.socket = new Socket(adress, port);
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        liseningMessegesFromServer();
     }
+
+    private void liseningMessegesFromServer() {
+        isLisening = true;
+        System.out.println("Lisening...");
+        lisenThread = new Thread(() -> {
+            while (isLisening) {
+                try {
+                    String message = acceptMessage();
+                    if (listenerÍnQueue != null && message != null) {
+                        System.out.print("Prijata zprava: " + message + "\n");
+                        listenerÍnQueue.onMessage(message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        lisenThread.start();
+    }
+
+    private void stopLisening() {
+        isLisening = false;
+        //sleep();
+    }
+    public interface IListenerInQueue {
+        void onMessage(String message);
+    }
+
+    public void addListnerInQueue(IListenerInQueue listenerInQueue) {
+        this.listenerÍnQueue = listenerInQueue;
+    }
+
+
 }

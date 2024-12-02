@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class OknoCekani extends JPanel {
+public class OknoCekani extends JPanel implements Connection.IListenerInQueue {
     public OknoCekani(Window okno) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
@@ -44,13 +44,19 @@ public class OknoCekani extends JPanel {
         hraniceMrize.gridy = 1; // Tlačítko bude v řádku 1
         add(tlacitko, hraniceMrize);
 
+        try {
+            Connection.getInstance().addListnerInQueue(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         tlacitko.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
                 try {
                     Connection spoj = Connection.getInstance();
-                    String responce = spoj.sendMessage("Mess:disconnect:" + spoj.clientId + ":" + "\n");
+                    String responce = spoj.sendMessage("Mess:logout:" + spoj.clientId + ":" + "\n");
                     System.out.println("Odpoved serveru: " + responce);
                     okno.zobrazHru("Login");
                 } catch (IOException ex) {
@@ -58,5 +64,31 @@ public class OknoCekani extends JPanel {
                 }
             }
         });
+    }
+
+    @Override
+    public void onMessage(String message) {
+        if (message.startsWith("Mess:gameBegin:")) {
+            System.out.println("Zprava identifikovana jako start hry");
+            Window window = (Window) SwingUtilities.getWindowAncestor(this);
+            window.zobrazHru("Hra");
+        }
+        if (message.startsWith("Mess:login:")) {
+            System.out.println("Zprava identifikovana jako login");
+            String id = message.split(":")[2];
+            try {
+                Connection.getInstance().clientId = Integer.parseInt(id);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (message.startsWith("Mess:logout:")) {
+            System.out.println("Zprava identifikovana jako logout");
+            try {
+                Connection.getInstance().clientId = -1;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

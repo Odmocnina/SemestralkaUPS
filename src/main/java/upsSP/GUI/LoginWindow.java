@@ -38,7 +38,7 @@ public class LoginWindow extends JPanel {
         hraniceMrize.gridy = 1;
         add(ipLabel, hraniceMrize);
 
-        JTextField ipTextField = new JTextField(15);
+        JTextField ipTextField = new JTextField("localhost", 15);
         hraniceMrize.gridx = 1;
         hraniceMrize.gridy = 1;
         add(ipTextField, hraniceMrize);
@@ -48,7 +48,7 @@ public class LoginWindow extends JPanel {
         hraniceMrize.gridy = 2;
         add(portLabel, hraniceMrize);
 
-        JTextField portTextField = new JTextField(15);
+        JTextField portTextField = new JTextField("10000", 15);
         hraniceMrize.gridx = 1;
         hraniceMrize.gridy = 2;
         add(portTextField, hraniceMrize);
@@ -73,8 +73,10 @@ public class LoginWindow extends JPanel {
                     Connection spoj = Connection.getInstance();
                     spoj.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
                     String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + ":\n");
-                    System.out.println("Odpoved serveru: " + responce);
-                    okno.zobrazHru("Cekani");
+                    //System.out.println("Odpoved serveru: " + responce);
+                    //if (responce != null) {
+                        okno.zobrazHru("Cekani");
+                    //}
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
