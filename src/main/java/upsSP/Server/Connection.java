@@ -16,6 +16,10 @@ public class Connection {
     public int clientId;
     private IListenerInQueue listenerÍnQueue;
 
+    private IListenerInGame listenerInGame;
+
+    private IListenerAfterTurn listenerAfterTurn;
+
     // Soukromý konstruktor
     private Connection() {
     }
@@ -88,9 +92,18 @@ public class Connection {
             while (isLisening) {
                 try {
                     String message = acceptMessage();
+                    System.out.println("Prijata zprava: " + message);
                     if (listenerÍnQueue != null && message != null) {
-                        System.out.print("Prijata zprava: " + message + "\n");
+                        //System.out.print("Prijata zprava: " + message + "\n");
                         listenerÍnQueue.onMessage(message);
+                    }
+                    //if (listenerInGame != null && message != null) {
+                        //System.out.print("Prijata zprava: " + message + "\n");
+                        //listenerInGame.onMessage(message);
+                    //}
+                    if (listenerAfterTurn != null && message != null) {
+                        //System.out.print("Prijata zprava: " + message + "\n");
+                        listenerAfterTurn.onMessage(message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -108,9 +121,24 @@ public class Connection {
         void onMessage(String message);
     }
 
+    public interface IListenerInGame {
+        void onMessage(String message);
+    }
+
+    public interface IListenerAfterTurn {
+        void onMessage(String message);
+    }
+
     public void addListnerInQueue(IListenerInQueue listenerInQueue) {
         this.listenerÍnQueue = listenerInQueue;
     }
 
+    public void addListnerInGame(IListenerInGame listenerInGame) {
+        this.listenerInGame = listenerInGame;
+    }
+
+    public void addListnerAfterTurn(IListenerAfterTurn listenerAfterTurn) {
+        this.listenerAfterTurn = listenerAfterTurn;
+    }
 
 }

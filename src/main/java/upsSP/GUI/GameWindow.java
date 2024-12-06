@@ -1,13 +1,15 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Konstanty;
+import upsSP.Server.Connection;
 import upsSP.VolbyTahu.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
-public class GameWindow extends JPanel {
+public class GameWindow extends JPanel implements Connection.IListenerInGame {
 
     int hodnota = -10;
 
@@ -96,14 +98,27 @@ public class GameWindow extends JPanel {
         mriz.gridy = y;  // První řádek
         add(tlacitko, mriz);
 
+        try {
+            Connection.getInstance().addListnerInGame(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         tlacitko.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hodnota = volba.getValue();
+                try {
+                    Connection spoj = Connection.getInstance();
+                    spoj.sendMessage("Mess:turn:" + hodnota + ":\n");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 pridejKolo();
                 aktualizujLably();
-                OknoZhodnoceniHry.aktualizujLably(hodnota);
-                okno.zobrazHru("ZhodnoceniHry");
+                OknoZhodnoceniHry.hodnota = hodnota;
+                OknoZhodnoceniHry.aktualizujLably();
+                okno.zobrazHru("PoTahu");
                 System.out.println("Hodnota: " + hodnota + " Kolo: " + pocetOdehranychKol);
             }
         });
@@ -118,127 +133,12 @@ public class GameWindow extends JPanel {
         stavLabel.setText("stavHry: " + pocetOdehranychKol);
     }
 
-        /*int poctetRadku = 3;
-
-    int pocetSloupcu = 3;
-
-    //IVolba[] volby;
-
-    public OknoHra(Okno okno) {
-        volby = new IVolba[Konstanty.POCET_MOZNOSTI + 1];
-        //boolean jeZvoleno = false;
-        //IVolba zvoleno = null;
-        //double Xkliknuto = 0;
-        //double Ykliknuto = 0;
-        //while (!jeZvoleno) {
-
-        if (true) {
-            this.addMouseListener(new MouseAdapter() {
-                public void mousePressed(MouseEvent e) {
-                    System.out.println("Kliknuto na: " + (e.getX() - getWidth() / 2) + " " + (e.getY() - getHeight() / 2));
-                    double Xkliknuto = e.getX() - getWidth() / 2;
-                    double Ykliknuto = e.getY() - getHeight() / 2;
-                    IVolba zvoleno = coByloVybrano(Xkliknuto, Ykliknuto);
-                    if (zvoleno != null) {
-                        int hodnota = zvoleno.ziskejHodnotu();
-                        //jeZvoleno = true;
-                        if (hodnota == -1) {
-                            Random nahoda = new Random();
-                            hodnota = nahoda.nextInt(1, Konstanty.POCET_MOZNOSTI);
-                        }
-                        System.out.println("Hodnota: " + hodnota + " Kolo: " + Okno.pocetOdehranychKol);
-                            Okno.pocetOdehranychKol = Okno.pocetOdehranychKol + 1;
-                        if (Okno.pocetOdehranychKol >= Konstanty.POCET_KOL) {
-                            System.out.println("Konec hry");
-                        }
-                        //okno.zobrazHru("ZhodnoceniHry");
-                        repaint();
-                    }
-                }
-            });
-        }
-
-    }
-
-    private void pripravGrafiku(Graphics2D g) {
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        double sirka = getWidth();
-        double vyska = getHeight();
-        g.translate(sirka / 2, vyska / 2);
-        double meritkoX = sirka / Konstanty.SIRKA_OKNA;
-        double meritkoY = vyska / Konstanty.VYSKA_OKNA;
-        double mensi = Math.min(meritkoX, meritkoY);
-        g.scale(mensi, mensi);
-    }
-
-    private double ziskejMeritkoX() {
-        double sirka = getWidth();
-        return sirka / Konstanty.SIRKA_OKNA;
-    }
-
-    private double ziskejMeritkoY() {
-        double vyska = getHeight();
-        return vyska / Konstanty.VYSKA_OKNA;
-    }
-
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
-        pripravGrafiku(g2);
-        setBackground(new Color(0, 128, 0));
-        //setLayout(new GridLayout(poctetRadku, pocetSloupcu));
-        IVolba kamen = new Kamen();
-        volby[0] = kamen;
-        IVolba nuzky = new Nuzky();
-        volby[1] = nuzky;
-        IVolba papir = new Papir();
-        volby[2] = papir;
-        IVolba tapir = new Tapir();
-        volby[3] = tapir;
-        IVolba spock = new Spock();
-        volby[4] = spock;
-        IVolba nahoda = new Nahoda();
-        volby[5] = nahoda;
-
-
-        g2.setFont(new Font("Arial", Font.BOLD, 35));
-        g2.drawString("Vyberte: ", 0 - Konstanty.SIRKA_OKNA / 2 + Konstanty.OFFSET_PISMA_VE_HRE / 2, 0 - Konstanty.VYSKA_OKNA / 2 + Konstanty.OFFSET_PISMA_VE_HRE);
-        g2.drawString("Kolo: " + (Okno.pocetOdehranychKol + 1), 0 + Konstanty.SIRKA_OKNA / 3 + Konstanty.OFFSET_PISMA_VE_HRE / 2, 0 - Konstanty.VYSKA_OKNA / 2 + Konstanty.OFFSET_PISMA_VE_HRE);
-
-        aktualizaceRozmeru();
-
-        kamen.nakresliVolbu(g2, 1, 1, pocetSloupcu, poctetRadku, getWidth(), getHeight());
-        nuzky.nakresliVolbu(g2, 2, 1, pocetSloupcu, poctetRadku, getWidth(), getHeight());
-        papir.nakresliVolbu(g2, 3, 1, pocetSloupcu, poctetRadku, getWidth(), getHeight());
-        tapir.nakresliVolbu(g2, 1, 2, pocetSloupcu, poctetRadku, getWidth(), getHeight());
-        spock.nakresliVolbu(g2, 2, 2, pocetSloupcu, poctetRadku, getWidth(), getHeight());
-        nahoda.nakresliVolbu(g2, 3, 2, pocetSloupcu, poctetRadku, getWidth(), getHeight());
-    }*/
-
-    /*@Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
-    public IVolba coByloVybrano(double x, double y) {
-        IVolba navrat = null;
-        boolean nalezeno = false;
-        int i = 0;
-        while (i < volby.length && !nalezeno) {
-            if (((AbstractVolba)volby[i]).jeZvoleno(x, y)) {
-                navrat = volby[i];
-                nalezeno = true;
-
-            }
-            i = i + 1;
+    public void onMessage(String message) {
+        if (message.startsWith("Mess:turn:")) {
+            System.out.println("Zprava identifikovana jako tah");
+            Window window = (Window) SwingUtilities.getWindowAncestor(this);
+            window.zobrazHru("zhodnoceniHry");
         }
-        return navrat;
     }
-
-    private void aktualizaceRozmeru() {
-        for (IVolba volba : volby) {
-            volba.prepocitejRozmery(getWidth(), getHeight(), pocetSloupcu, poctetRadku);
-        }
-    }*/
 }

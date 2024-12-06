@@ -10,6 +10,10 @@ import java.awt.event.ActionListener;
 public class OknoZhodnoceniHry extends JPanel {
 
     static JLabel volbaLabel, volbaProtivnikaLabel, vysledekKolaLabel, vysledekHryLabel;
+    static int hodnotaProtivnika = -1;
+    static String vysledekKola = "";
+
+    static int hodnota = -1;
 
     public OknoZhodnoceniHry(Window okno) {
         GridBagLayout mriz = new GridBagLayout();
@@ -61,6 +65,7 @@ public class OknoZhodnoceniHry extends JPanel {
     }
 
     public static String ziskejNazevZHodnoty(int hodnota) {
+        System.out.println("Hodnota: " + hodnota);
         switch (hodnota) {
             case 1:
                 return "Kámen";
@@ -77,8 +82,29 @@ public class OknoZhodnoceniHry extends JPanel {
         }
     }
 
-    public static void aktualizujLably(int hodnota) {
+    public static void aktualizujLably() {
+        System.out.println("Hodnota: " + hodnota + " hodnota protivnika: " + hodnotaProtivnika + " vysledek " + vysledekKola);
         volbaLabel.setText("Zvolil jste: " + ziskejNazevZHodnoty(hodnota));
+        volbaProtivnikaLabel.setText("Protivník zvolil: " + ziskejNazevZHodnoty(hodnotaProtivnika));
+        vysledekKolaLabel.setText("Výsledek kola: " + vysledekKola);
+    }
+
+    public static void setParametry(String message) {
+        System.out.println("zrava v zpracovani: " + message);
+        String[] parametry = message.split(":");
+        hodnotaProtivnika = Integer.parseInt(parametry[3]);
+        if (parametry[2].equals("w")) {
+            System.out.println("vyhra");
+            vysledekKola = "Výhra";
+        } else if (parametry[2].equals("l")) {
+            System.out.println("prohra");
+            vysledekKola = "Prohra";
+        } else if (parametry[2].equals("s")) {
+            System.out.println("remiza");
+            vysledekKola = "Remíza";
+        } else {
+            vysledekKola = "Chyba";
+        }
     }
 
     @Override
