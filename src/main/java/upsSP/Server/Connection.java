@@ -20,6 +20,8 @@ public class Connection {
 
     private IListenerAfterTurn listenerAfterTurn;
 
+    private IListenerInJudgement listenerInJudgement;
+
     // Soukromý konstruktor
     private Connection() {
     }
@@ -129,6 +131,10 @@ public class Connection {
         void onMessage(String message);
     }
 
+    public interface IListenerInJudgement {
+        void onMessage(String message);
+    }
+
     public void addListnerInQueue(IListenerInQueue listenerInQueue) {
         this.listenerÍnQueue = listenerInQueue;
     }
@@ -139,6 +145,10 @@ public class Connection {
 
     public void addListnerAfterTurn(IListenerAfterTurn listenerAfterTurn) {
         this.listenerAfterTurn = listenerAfterTurn;
+    }
+
+    public void addListnerInJudgement(IListenerInJudgement listenerInJudgement) {
+        this.listenerInJudgement = listenerInJudgement;
     }
 
 }

@@ -23,6 +23,7 @@ public class Konstanty {
     public static final int OFFSET_OBRAZKU = 25;
     public static final String CESTA_DO_DATA = "src/main/resources/data/";
     public static final double VELIKOST_OBRAZKU = 60.0;
+    public static final int KOL_POCET = 3;
     public static final int VELIKOST_PISMA_ZHODNOCENI = 20;
     public static final Color BARVA_POZADI = new Color(0, 102, 0);
 }

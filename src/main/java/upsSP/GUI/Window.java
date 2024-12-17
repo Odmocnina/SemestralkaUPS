@@ -10,13 +10,14 @@ public class Window extends JFrame {
     private JPanel mainWindow;
 
     OknoZhodnoceniHry zhodnoceniHry;
+    GameWindow hra;
 
     public Window() {
         widnowList = new CardLayout();
         mainWindow = new JPanel(widnowList);
         LoginWindow login = new LoginWindow(this);
         //OknoLobby lobby = new OknoLobby(this);
-        GameWindow hra = new GameWindow(this);
+        hra = new GameWindow(this);
         AfterTurnWindow poTahu = new AfterTurnWindow(this);
         zhodnoceniHry = new OknoZhodnoceniHry(this);
         OknoCekani cekani = new OknoCekani(this);
@@ -40,6 +41,11 @@ public class Window extends JFrame {
     }
 
     public void zobrazHru(String sceneName) {
+        System.out.println("Zobrazuju scenu " + sceneName);
         widnowList.show(mainWindow, sceneName);
+    }
+
+    public void aktializujLably() {
+        hra.aktualizujLably();
     }
 }

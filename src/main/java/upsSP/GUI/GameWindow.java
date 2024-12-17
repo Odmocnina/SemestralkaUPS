@@ -3,6 +3,7 @@ package upsSP.GUI;
 import upsSP.Nastroje.Konstanty;
 import upsSP.Server.Connection;
 import upsSP.VolbyTahu.*;
+import upsSP.Nastroje.GameState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +15,6 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
     int hodnota = -10;
 
     ITurn[] volby = new ITurn[Konstanty.POCET_MOZNOSTI + 1];
-
-    int pocetOdehranychKol = 0;
 
     JLabel koloLabel, stavLabel;
 
@@ -45,7 +44,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         hraniceMrize.weighty = 1;  // Roztahování na výšku
 
         // Přidání nadpisu pro kolo číslo
-        koloLabel = new JLabel("Kolo číslo: " + pocetOdehranychKol, SwingConstants.CENTER);
+        koloLabel = new JLabel("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol, SwingConstants.CENTER);
         koloLabel.setFont(new Font("Arial", Font.BOLD, 16));
         hraniceMrize.gridx = 0;
         hraniceMrize.gridy = 0;
@@ -53,7 +52,9 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         add(koloLabel, hraniceMrize);
 
         // Přidání nadpisu pro stav hry
-        stavLabel = new JLabel("stavHry: " + pocetOdehranychKol, SwingConstants.CENTER);
+        //stavLabel = new JLabel("stavHry: " + pocetOdehranychKol, SwingConstants.CENTER);
+        stavLabel = new JLabel("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>"
+                + "Proher: " + GameState.getInstance().pocetProhranychKol, SwingConstants.CENTER);
         koloLabel.setFont(new Font("Arial", Font.BOLD, 16));
         hraniceMrize.gridx = 1;
         hraniceMrize.gridy = 0;
@@ -114,23 +115,22 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                pridejKolo();
-                aktualizujLably();
                 OknoZhodnoceniHry.hodnota = hodnota;
-                OknoZhodnoceniHry.aktualizujLably();
                 okno.zobrazHru("PoTahu");
-                System.out.println("Hodnota: " + hodnota + " Kolo: " + pocetOdehranychKol);
+                System.out.println("Hodnota: " + hodnota + " Kolo: " + GameState.getInstance().pocetOdehranychKol);
             }
         });
     }
 
-    public void pridejKolo() {
+    /*public void pridejKolo() {
         this.pocetOdehranychKol = this.pocetOdehranychKol + 1;
-    }
+    }*/
 
-    private void aktualizujLably() {
-        koloLabel.setText("Kolo číslo: " + pocetOdehranychKol);
-        stavLabel.setText("stavHry: " + pocetOdehranychKol);
+    public void aktualizujLably() {
+        System.out.println("v akturalizaci labelu");
+        koloLabel.setText("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol);
+        //stavLabel.setText("stavHry: " + pocetOdehranychKol);
+        stavLabel.setText("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>" + "Proher:" + GameState.getInstance().pocetProhranychKol + "</html>");
     }
 
     @Override
