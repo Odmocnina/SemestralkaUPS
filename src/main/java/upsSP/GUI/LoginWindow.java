@@ -22,10 +22,10 @@ public class LoginWindow extends JPanel {
         hraniceMrize.anchor = GridBagConstraints.WEST;
 
         // Přidání popisku pro jméno
-        JLabel jmenoLabel = new JLabel("Jméno:");
+        JLabel nameLabel = new JLabel("Jméno:");
         hraniceMrize.gridx = 0;
         hraniceMrize.gridy = 0;
-        add(jmenoLabel, hraniceMrize);
+        add(nameLabel, hraniceMrize);
 
         // Přidání textového pole pro zadání jména
         JTextField jmenoTextField = new JTextField(15);
