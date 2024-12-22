@@ -79,10 +79,10 @@ public class LoginWindow extends JPanel {
                         String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + ":\n");
                         okno.zobrazHru("Cekani");
                     }
-                } catch (NumberFormatException ex) {
+                } catch (NumberFormatException e2) {
                     JOptionPane.showMessageDialog(null, "Port musí být číslo!", "Chyba",
                             JOptionPane.ERROR_MESSAGE);
-                } catch (IOException ex) {
+                } catch (IOException e2) {
                     JOptionPane.showMessageDialog(null,
                             "Nelze se připojit k serveru. Zkontrolujte IP adresu a port.",
                             "Chyba připojení", JOptionPane.ERROR_MESSAGE);
