@@ -2,6 +2,7 @@ package upsSP.GUI;
 
 import upsSP.Nastroje.Konstanty;
 import upsSP.Server.Connection;
+import upsSP.Nastroje.GameState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,6 +73,8 @@ public class OknoCekani extends JPanel implements Connection.IListenerInQueue {
             System.out.println("Zprava identifikovana jako start hry");
             Window window = (Window) SwingUtilities.getWindowAncestor(this);
             window.zobrazHru("Hra");
+            OknoZhodnoceniHry.dalsiKoloButton.setText("Další kolo");
+            GameState.getInstance().gameInProgress = true;
         }
         if (message.startsWith("Mess:login:")) {
             System.out.println("Zprava identifikovana jako login");

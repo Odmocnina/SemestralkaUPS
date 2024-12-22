@@ -10,29 +10,29 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class AfterTurnWindow extends JPanel implements Connection.IListenerAfterTurn {
-    public AfterTurnWindow(Window okno) {
-        GridBagLayout mriz = new GridBagLayout();
-        setLayout(mriz);
+    public AfterTurnWindow(Window window) {
+        GridBagLayout grid = new GridBagLayout();
+        setLayout(grid);
         setBackground(Konstanty.BARVA_POZADI);
 
-        GridBagConstraints hraniceMrize = new GridBagConstraints();
-        hraniceMrize.insets = new Insets(7, 7, 7, 7);
-        hraniceMrize.fill = GridBagConstraints.CENTER;
-        hraniceMrize.anchor = GridBagConstraints.CENTER; // Ukotví nápis ve středu
+        GridBagConstraints gridBorders = new GridBagConstraints();
+        gridBorders.insets = new Insets(7, 7, 7, 7);
+        gridBorders.fill = GridBagConstraints.CENTER;
+        gridBorders.anchor = GridBagConstraints.CENTER; // Ukotví nápis ve středu
 
-        hraniceMrize.weighty = 1.0;
-        hraniceMrize.weightx = 1.0;
-        hraniceMrize.gridwidth = GridBagConstraints.REMAINDER;
+        gridBorders.weighty = 1.0;
+        gridBorders.weightx = 1.0;
+        gridBorders.gridwidth = GridBagConstraints.REMAINDER;
 
         // Vytvoření nápisu
-        JLabel napis = new JLabel("Čekání na tah protihráče...");
-        napis.setForeground(Color.WHITE); // Nastavení barvy textu
-        napis.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
+        JLabel text = new JLabel("Čekání na tah protihráče...");
+        text.setForeground(Color.WHITE); // Nastavení barvy textu
+        text.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
 
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 0;
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 0;
 
-        add(napis, hraniceMrize);
+        add(text, gridBorders);
 
         try {
             Connection.getInstance().addListnerAfterTurn(this);

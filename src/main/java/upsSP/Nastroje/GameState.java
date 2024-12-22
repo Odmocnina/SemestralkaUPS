@@ -7,7 +7,7 @@ public class GameState {
     public int pocetVyhranychKol = 0;
     public int pocetProhranychKol = 0;
     public int pocetRemiz = 0;
-    public static boolean gameInProgress = true;
+    public boolean gameInProgress = true;
 
     static GameState instance;
     private GameState() {

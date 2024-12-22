@@ -70,15 +70,22 @@ public class LoginWindow extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
                 try {
-                    Connection spoj = Connection.getInstance();
-                    spoj.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
-                    String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + ":\n");
-                    //System.out.println("Odpoved serveru: " + responce);
-                    //if (responce != null) {
+                    if (jmenoTextField.getText().length() > 15) {
+                        JOptionPane.showMessageDialog(null, "Jméno moc dlouhé!", "Chyba",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        Connection spoj = Connection.getInstance();
+                        spoj.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
+                        String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + ":\n");
                         okno.zobrazHru("Cekani");
-                    //}
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Port musí být číslo!", "Chyba",
+                            JOptionPane.ERROR_MESSAGE);
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    JOptionPane.showMessageDialog(null,
+                            "Nelze se připojit k serveru. Zkontrolujte IP adresu a port.",
+                            "Chyba připojení", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

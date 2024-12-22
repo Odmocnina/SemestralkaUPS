@@ -46,6 +46,6 @@ public class Window extends JFrame {
     }
 
     public void aktializujLably() {
-        hra.aktualizujLably();
+        hra.updateLabes();
     }
 }

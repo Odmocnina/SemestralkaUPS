@@ -38,6 +38,7 @@ public class Connection {
     public String sendMessage(String message) throws IOException {
         out.println(message);
         out.flush();
+        System.out.print("Posilam: " + message);
         /*if (in != null) {
             String messageRecieved = in.readLine();
             if (messageRecieved != null) {
@@ -107,12 +108,19 @@ public class Connection {
                         //System.out.print("Prijata zprava: " + message + "\n");
                         listenerAfterTurn.onMessage(message);
                     }
+                    if (message.equals("Mess:břong")) {
+                        pong();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
         lisenThread.start();
+    }
+
+    private void pong() throws IOException {
+        Connection.getInstance().sendMessage("Mess:pong:\n");
     }
 
     private void stopLisening() {
@@ -134,6 +142,10 @@ public class Connection {
     public interface IListenerInJudgement {
         void onMessage(String message);
     }
+
+//    private void pong() {
+//
+//    }
 
     public void addListnerInQueue(IListenerInQueue listenerInQueue) {
         this.listenerÍnQueue = listenerInQueue;

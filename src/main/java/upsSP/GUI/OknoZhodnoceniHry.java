@@ -86,17 +86,16 @@ public class OknoZhodnoceniHry extends JPanel implements Connection.IListenerInJ
     }
 
     public static String ziskejNazevZHodnoty(int hodnota) {
-        System.out.println("Hodnota: " + hodnota);
         switch (hodnota) {
-            case 1:
+            case Konstanty.HODNOTA_KAMEN:
                 return "Kámen";
-            case 2:
+            case Konstanty.HODNOTA_NUZKY:
                 return "Nůžky";
-            case 3:
+            case Konstanty.HODNOTA_PAPIR:
                 return "Papír";
-            case 4:
+            case Konstanty.HODNOTA_TAPIR:
                 return "Tapír";
-            case 5:
+            case Konstanty.HODNOTA_SPOCK:
                 return "Spock";
             default:
                 return "Neznámá hodnota";
@@ -109,13 +108,14 @@ public class OknoZhodnoceniHry extends JPanel implements Connection.IListenerInJ
         vysledekKolaLabel.setText("Výsledek kola: " + vysledekKola);
         if (GameState.getInstance().pocetVyhranychKol == Konstanty.KOL_POCET) {
             vysledekHryLabel.setText("Výsledek hry: Vyhrál si");
-            dalsiKoloButton.setText("Zpátky na login");
-            GameState.gameInProgress = false;
+            dalsiKoloButton.setText("Zpátky do fronty");
+            GameState.getInstance().gameInProgress = false;
             GameState.getInstance().setScores(0, 0, 0);
         } else if (GameState.getInstance().pocetProhranychKol == Konstanty.KOL_POCET) {
             vysledekHryLabel.setText("Výsledek hry: Prohrál si");
-            dalsiKoloButton.setText("Zpátky na login");
-            GameState.gameInProgress = false;
+            //dalsiKoloButton.setText("Zpátky na login");
+            dalsiKoloButton.setText("Zpátky do fronty");
+            GameState.getInstance().gameInProgress = false;
             GameState.getInstance().setScores(0, 0, 0);
         } else {
             vysledekHryLabel.setText("Výsledek hry: V průběhu hry");

@@ -12,54 +12,54 @@ import java.io.IOException;
 
 public class GameWindow extends JPanel implements Connection.IListenerInGame {
 
-    int hodnota = -10;
+    int turnValue = -10;
 
-    ITurn[] volby = new ITurn[Konstanty.POCET_MOZNOSTI + 1];
+    ITurn[] turns = new ITurn[Konstanty.POCET_MOZNOSTI + 1];
 
-    JLabel koloLabel, stavLabel;
+    JLabel roundLabel, stavLabel;
 
-    public GameWindow(Window okno) {
-        ITurn kamen = new Stone();
-        volby[0] = kamen;
-        ITurn nuzky = new Scissors();
-        volby[1] = nuzky;
-        ITurn papir = new Paper();
-        volby[2] = papir;
-        ITurn tapir = new Lizard();
-        volby[3] = tapir;
+    public GameWindow(Window window) {
+        ITurn stone = new Stone();
+        turns[0] = stone;
+        ITurn scissors = new Scissors();
+        turns[1] = scissors;
+        ITurn paper = new Paper();
+        turns[2] = paper;
+        ITurn lizard = new Lizard();
+        turns[3] = lizard;
         ITurn spock = new Spock();
-        volby[4] = spock;
-        ITurn nahoda = new Mandom();
-        volby[5] = nahoda;
+        turns[4] = spock;
+        ITurn mandom = new Mandom();
+        turns[5] = mandom;
         setBackground(Konstanty.BARVA_POZADI);
 
-        GridBagLayout mriz = new GridBagLayout();
-        setLayout(mriz);
+        GridBagLayout grid = new GridBagLayout();
+        setLayout(grid);
 
-        GridBagConstraints hraniceMrize = new GridBagConstraints();
-        hraniceMrize.insets = new Insets(7, 7, 7, 7);
-        hraniceMrize.fill = GridBagConstraints.BOTH;  // Roztažení na obě strany
-        hraniceMrize.anchor = GridBagConstraints.CENTER;  // Zarovnání na střed
-        hraniceMrize.weightx = 1;  // Roztahování na šířku
-        hraniceMrize.weighty = 1;  // Roztahování na výšku
+        GridBagConstraints gridBorders = new GridBagConstraints();
+        gridBorders.insets = new Insets(7, 7, 7, 7);
+        gridBorders.fill = GridBagConstraints.BOTH;  // Roztažení na obě strany
+        gridBorders.anchor = GridBagConstraints.CENTER;  // Zarovnání na střed
+        gridBorders.weightx = 1;  // Roztahování na šířku
+        gridBorders.weighty = 1;  // Roztahování na výšku
 
         // Přidání nadpisu pro kolo číslo
-        koloLabel = new JLabel("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol, SwingConstants.CENTER);
-        koloLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 0;
-        hraniceMrize.gridwidth = 1;  // Nápis přes všechny tři sloupce
-        add(koloLabel, hraniceMrize);
+        roundLabel = new JLabel("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol, SwingConstants.CENTER);
+        roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 0;
+        gridBorders.gridwidth = 1;  // Nápis přes všechny tři sloupce
+        add(roundLabel, gridBorders);
 
         // Přidání nadpisu pro stav hry
-        //stavLabel = new JLabel("stavHry: " + pocetOdehranychKol, SwingConstants.CENTER);
         stavLabel = new JLabel("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>"
-                + "Proher: " + GameState.getInstance().pocetProhranychKol, SwingConstants.CENTER);
-        koloLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 0;
-        hraniceMrize.gridwidth = 1;  // Nápis přes všechny tři sloupce
-        add(stavLabel, hraniceMrize);
+                + "Proher: " + GameState.getInstance().pocetProhranychKol + "<br>" +
+                "Remíz:" + GameState.getInstance().pocetRemiz + "</html>", SwingConstants.CENTER);
+        roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        gridBorders.gridx = 1;
+        gridBorders.gridy = 0;
+        gridBorders.gridwidth = 1;  // Nápis přes všechny tři sloupce
+        add(stavLabel, gridBorders);
 
         JLabel pravidlaLabel = new JLabel("<html>Kámen > Nůžky, Tapír" +
                 "<br>Papír > Kámen, Tapír" +
@@ -68,36 +68,36 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
                 "<br>Spock > Kámen, Papír</html>"
                 , SwingConstants.CENTER);
 
-        koloLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        hraniceMrize.gridx = 2;
-        hraniceMrize.gridy = 0;
-        hraniceMrize.gridwidth = 1;  // Tento label bude přes všechny tři sloupce
-        add(pravidlaLabel, hraniceMrize);
+        roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        gridBorders.gridx = 2;
+        gridBorders.gridy = 0;
+        gridBorders.gridwidth = 1;  // Tento label bude přes všechny tři sloupce
+        add(pravidlaLabel, gridBorders);
 
-        pridaniTlacitka(hraniceMrize, 0, 1, kamen, okno);
-        pridaniTlacitka(hraniceMrize, 1, 1, nuzky, okno);
-        pridaniTlacitka(hraniceMrize, 2, 1, papir, okno);
-        pridaniTlacitka(hraniceMrize, 0, 2, tapir, okno);
-        pridaniTlacitka(hraniceMrize, 1, 2, spock, okno);
-        pridaniTlacitka(hraniceMrize, 2, 2, nahoda, okno);
+        addButton(gridBorders, 0, 1, stone, window);
+        addButton(gridBorders, 1, 1, scissors, window);
+        addButton(gridBorders, 2, 1, paper, window);
+        addButton(gridBorders, 0, 2, lizard, window);
+        addButton(gridBorders, 1, 2, spock, window);
+        addButton(gridBorders, 2, 2, mandom, window);
     }
 
-    private void pridaniTlacitka(GridBagConstraints mriz, int x, int y, ITurn volba, Window okno) {
+    private void addButton(GridBagConstraints grid, int x, int y, ITurn turn, Window window) {
         // První řádek tlačítek (gridx = 0, 1, 2 pro tři sloupce)
-        JButton tlacitko = new JButton(volba.getNameOfTurn());
+        JButton button = new JButton(turn.getNameOfTurn());
 
-        ImageIcon obrazek = new ImageIcon(Konstanty.CESTA_DO_DATA + volba.getNameOfPictureFile());
+        ImageIcon image = new ImageIcon(Konstanty.CESTA_DO_DATA + turn.getNameOfPictureFile());
         // Změna velikosti ikony
-        Image img = obrazek.getImage();
+        Image img = image.getImage();
         Image newimg = img.getScaledInstance((int)(Konstanty.VELIKOST_OBRAZKU),
                 (int)(Konstanty.VELIKOST_OBRAZKU), java.awt.Image.SCALE_SMOOTH); // Změň velikost podle potřeby
-        ImageIcon scaledObrazek = new ImageIcon(newimg);
-        tlacitko.setBackground(Color.WHITE);
-        tlacitko.setIcon(scaledObrazek);
+        ImageIcon scaledImage = new ImageIcon(newimg);
+        button.setBackground(Color.WHITE);
+        button.setIcon(scaledImage);
 
-        mriz.gridx = x;  // První sloupec
-        mriz.gridy = y;  // První řádek
-        add(tlacitko, mriz);
+        grid.gridx = x;  // První sloupec
+        grid.gridy = y;  // První řádek
+        add(button, grid);
 
         try {
             Connection.getInstance().addListnerInGame(this);
@@ -105,19 +105,18 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
             throw new RuntimeException(e);
         }
 
-        tlacitko.addActionListener(new ActionListener() {
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hodnota = volba.getValue();
+                turnValue = turn.getValue();
                 try {
                     Connection spoj = Connection.getInstance();
-                    spoj.sendMessage("Mess:turn:" + hodnota + ":\n");
+                    spoj.sendMessage("Mess:turn:" + turnValue + ":\n");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                OknoZhodnoceniHry.hodnota = hodnota;
-                okno.zobrazHru("PoTahu");
-                System.out.println("Hodnota: " + hodnota + " Kolo: " + GameState.getInstance().pocetOdehranychKol);
+                OknoZhodnoceniHry.hodnota = turnValue;
+                window.zobrazHru("PoTahu");
             }
         });
     }
@@ -126,11 +125,13 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         this.pocetOdehranychKol = this.pocetOdehranychKol + 1;
     }*/
 
-    public void aktualizujLably() {
+    public void updateLabes() {
         System.out.println("v akturalizaci labelu");
-        koloLabel.setText("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol);
+        roundLabel.setText("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol);
         //stavLabel.setText("stavHry: " + pocetOdehranychKol);
-        stavLabel.setText("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>" + "Proher:" + GameState.getInstance().pocetProhranychKol + "</html>");
+        stavLabel.setText("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>" + "Proher:"
+                + GameState.getInstance().pocetProhranychKol
+                + "<br>" +"Remíz:" + GameState.getInstance().pocetRemiz + "</html>");
     }
 
     @Override
