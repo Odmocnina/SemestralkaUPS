@@ -1,6 +1,6 @@
 package upsSP.VolbyTahu;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 
 public class Scissors implements ITurn {
 
@@ -17,6 +17,6 @@ public class Scissors implements ITurn {
     }
 
     public int getValue() {
-        return Konstanty.HODNOTA_NUZKY;
+        return Constants.SCISSORS_VALUE;
     }
 }

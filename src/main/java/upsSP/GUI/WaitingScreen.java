@@ -1,6 +1,6 @@
 package upsSP.GUI;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.Nastroje.GameState;
 
@@ -10,40 +10,40 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class OknoCekani extends JPanel implements Connection.IListenerInQueue {
-    public OknoCekani(Window okno) {
+public class WaitingScreen extends JPanel implements Connection.IListenerInQueue {
+    public WaitingScreen(Window window) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
-        setBackground(Konstanty.BARVA_POZADI);
+        setBackground(Constants.BACKGROUND_COLOR);
 
-        GridBagConstraints hraniceMrize = new GridBagConstraints();
-        hraniceMrize.insets = new Insets(7, 7, 7, 7);
-        hraniceMrize.fill = GridBagConstraints.CENTER;
-        hraniceMrize.anchor = GridBagConstraints.CENTER; // Ukotví nápis ve středu
+        GridBagConstraints gridBorders = new GridBagConstraints();
+        gridBorders.insets = new Insets(7, 7, 7, 7);
+        gridBorders.fill = GridBagConstraints.CENTER;
+        gridBorders.anchor = GridBagConstraints.CENTER; // Ukotví nápis ve středu
 
-        hraniceMrize.weighty = 1.0;
-        hraniceMrize.weightx = 1.0;
-        hraniceMrize.gridwidth = GridBagConstraints.REMAINDER;
+        gridBorders.weighty = 1.0;
+        gridBorders.weightx = 1.0;
+        gridBorders.gridwidth = GridBagConstraints.REMAINDER;
 
         // Vytvoření nápisu
         JLabel napis = new JLabel("Čekání na protihráče...");
         napis.setForeground(Color.WHITE); // Nastavení barvy textu
         napis.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
 
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 0;
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 0;
 
-        add(napis, hraniceMrize);
+        add(napis, gridBorders);
 
         // Vytvoření tlačítka
-        JButton tlacitko = new JButton("Zpátky na login");
-        tlacitko.setFont(new Font("Arial", Font.PLAIN, 18)); // Nastavení písma pro tlačítko
-        tlacitko.setPreferredSize(new Dimension(200, 50)); // Nastavení velikosti tlačítka
+        JButton button = new JButton("Zpátky na login");
+        button.setFont(new Font("Arial", Font.PLAIN, 18)); // Nastavení písma pro tlačítko
+        button.setPreferredSize(new Dimension(200, 50)); // Nastavení velikosti tlačítka
 
         // Přidání tlačítka pod nápis (do dalšího řádku)
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 1; // Tlačítko bude v řádku 1
-        add(tlacitko, hraniceMrize);
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 1; // Tlačítko bude v řádku 1
+        add(button, gridBorders);
 
         try {
             Connection.getInstance().addListnerInQueue(this);
@@ -51,15 +51,16 @@ public class OknoCekani extends JPanel implements Connection.IListenerInQueue {
             throw new RuntimeException(e);
         }
 
-        tlacitko.addActionListener(new ActionListener() {
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
                 try {
-                    Connection spoj = Connection.getInstance();
-                    String responce = spoj.sendMessage("Mess:logout:" + spoj.clientId + ":" + "\n");
-                    System.out.println("Odpoved serveru: " + responce);
-                    okno.zobrazHru("Login");
+                    Connection connection = Connection.getInstance();
+                    String responce = connection.sendMessage("Mess:logout:" + connection.clientId + ":");
+                    //System.out.println("Odpoved serveru: " + responce);
+                    Connection.getInstance().closeConnection();
+                    window.zobrazHru("Login");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -72,8 +73,8 @@ public class OknoCekani extends JPanel implements Connection.IListenerInQueue {
         if (message.startsWith("Mess:gameBegin:")) {
             System.out.println("Zprava identifikovana jako start hry");
             Window window = (Window) SwingUtilities.getWindowAncestor(this);
-            window.zobrazHru("Hra");
-            OknoZhodnoceniHry.dalsiKoloButton.setText("Další kolo");
+            window.zobrazHru("Game");
+            GameEvaluationScreen.nextRoundButton.setText("Další kolo");
             GameState.getInstance().gameInProgress = true;
         }
         if (message.startsWith("Mess:login:")) {

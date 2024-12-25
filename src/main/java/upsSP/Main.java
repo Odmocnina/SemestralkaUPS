@@ -20,9 +20,9 @@ public class Main {
 //            String response = client.sendMessage("Mess:Nazdar nezajdem na jedno?!");
 //            System.out.println("Odpověď od serveru: " + response);
 //            SwingUtilities.invokeLater(() -> {
-//                Window okno = new Window();
+//                Window window = new Window();
 //
-//                okno.setVisible(true);
+//                window.setVisible(true);
 //            });
 //        } catch (Exception e) {
 //            e.printStackTrace();

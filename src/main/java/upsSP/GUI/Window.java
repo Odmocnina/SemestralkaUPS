@@ -3,49 +3,50 @@ package upsSP.GUI;
 import javax.swing.*;
 import java.awt.*;
 
-import static upsSP.Nastroje.Konstanty.*;
+import static upsSP.Nastroje.Constants.*;
 
 public class Window extends JFrame {
     private CardLayout widnowList;
     private JPanel mainWindow;
 
-    OknoZhodnoceniHry zhodnoceniHry;
-    GameWindow hra;
+    GameEvaluationScreen gameEvaluation;
+    GameWindow game;
 
     public Window() {
         widnowList = new CardLayout();
         mainWindow = new JPanel(widnowList);
         LoginWindow login = new LoginWindow(this);
         //OknoLobby lobby = new OknoLobby(this);
-        hra = new GameWindow(this);
-        AfterTurnWindow poTahu = new AfterTurnWindow(this);
-        zhodnoceniHry = new OknoZhodnoceniHry(this);
-        OknoCekani cekani = new OknoCekani(this);
+        game = new GameWindow(this);
+        AfterTurnWindow afterTurn = new AfterTurnWindow(this);
+        gameEvaluation = new GameEvaluationScreen(this);
+        WaitingScreen waiting = new WaitingScreen(this);
+        AfterLoginWindow afterLogin = new AfterLoginWindow(this);
 
         mainWindow.add("Login", login);
         //mainWindow.add("Lobby", lobby);
-        mainWindow.add("Cekani", cekani);
-        mainWindow.add("Hra", hra);
-        mainWindow.add("ZhodnoceniHry", zhodnoceniHry);
-        mainWindow.add("PoTahu", poTahu);
+        mainWindow.add("Cekani", waiting);
+        mainWindow.add("Game", game);
+        mainWindow.add("ZhodnoceniHry", gameEvaluation);
+        mainWindow.add("PoTahu", afterTurn);
+        mainWindow.add("poLoginu", afterLogin);
 
         add(mainWindow);
         setTitle("Kamen nuzky papir");
-        setSize(SIRKA_OKNA, VYSKA_OKNA);
+        setSize(WIDTH_STOCK, HEIGHT_STOCK);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
     public void setParamaters(String message) {
-        zhodnoceniHry.setParametry(message);
+        gameEvaluation.setGameState(message);
     }
 
     public void zobrazHru(String sceneName) {
-        System.out.println("Zobrazuju scenu " + sceneName);
         widnowList.show(mainWindow, sceneName);
     }
 
     public void aktializujLably() {
-        hra.updateLabes();
+        game.updateLabes();
     }
 }

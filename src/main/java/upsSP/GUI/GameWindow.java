@@ -1,6 +1,6 @@
 package upsSP.GUI;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.VolbyTahu.*;
 import upsSP.Nastroje.GameState;
@@ -14,7 +14,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
 
     int turnValue = -10;
 
-    ITurn[] turns = new ITurn[Konstanty.POCET_MOZNOSTI + 1];
+    ITurn[] turns = new ITurn[Constants.NUMBER_OF_TURNS + 1];
 
     JLabel roundLabel, stavLabel;
 
@@ -31,7 +31,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         turns[4] = spock;
         ITurn mandom = new Mandom();
         turns[5] = mandom;
-        setBackground(Konstanty.BARVA_POZADI);
+        setBackground(Constants.BACKGROUND_COLOR);
 
         GridBagLayout grid = new GridBagLayout();
         setLayout(grid);
@@ -44,7 +44,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         gridBorders.weighty = 1;  // Roztahování na výšku
 
         // Přidání nadpisu pro kolo číslo
-        roundLabel = new JLabel("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol, SwingConstants.CENTER);
+        roundLabel = new JLabel("Kolo číslo: " + GameState.getInstance().numberOfPlayedRounds, SwingConstants.CENTER);
         roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
         gridBorders.gridx = 0;
         gridBorders.gridy = 0;
@@ -52,9 +52,9 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         add(roundLabel, gridBorders);
 
         // Přidání nadpisu pro stav hry
-        stavLabel = new JLabel("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>"
-                + "Proher: " + GameState.getInstance().pocetProhranychKol + "<br>" +
-                "Remíz:" + GameState.getInstance().pocetRemiz + "</html>", SwingConstants.CENTER);
+        stavLabel = new JLabel("<html>Výher: " + GameState.getInstance().numberOfWonRounds + "<br>"
+                + "Proher: " + GameState.getInstance().numberOfLostRounds + "<br>" +
+                "Remíz:" + GameState.getInstance().numberOfSM + "</html>", SwingConstants.CENTER);
         roundLabel.setFont(new Font("Arial", Font.BOLD, 16));
         gridBorders.gridx = 1;
         gridBorders.gridy = 0;
@@ -86,11 +86,11 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         // První řádek tlačítek (gridx = 0, 1, 2 pro tři sloupce)
         JButton button = new JButton(turn.getNameOfTurn());
 
-        ImageIcon image = new ImageIcon(Konstanty.CESTA_DO_DATA + turn.getNameOfPictureFile());
+        ImageIcon image = new ImageIcon(Constants.PATH_TO_DATA + turn.getNameOfPictureFile());
         // Změna velikosti ikony
         Image img = image.getImage();
-        Image newimg = img.getScaledInstance((int)(Konstanty.VELIKOST_OBRAZKU),
-                (int)(Konstanty.VELIKOST_OBRAZKU), java.awt.Image.SCALE_SMOOTH); // Změň velikost podle potřeby
+        Image newimg = img.getScaledInstance((int)(Constants.SOIOT),
+                (int)(Constants.SOIOT), java.awt.Image.SCALE_SMOOTH); // Změň velikost podle potřeby
         ImageIcon scaledImage = new ImageIcon(newimg);
         button.setBackground(Color.WHITE);
         button.setIcon(scaledImage);
@@ -110,12 +110,12 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
             public void actionPerformed(ActionEvent e) {
                 turnValue = turn.getValue();
                 try {
-                    Connection spoj = Connection.getInstance();
-                    spoj.sendMessage("Mess:turn:" + turnValue + ":\n");
+                    Connection connection = Connection.getInstance();
+                    connection.sendMessage("Mess:turn:" + turnValue + ":");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                OknoZhodnoceniHry.hodnota = turnValue;
+                GameEvaluationScreen.valueTurn = turnValue;
                 window.zobrazHru("PoTahu");
             }
         });
@@ -127,11 +127,11 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
 
     public void updateLabes() {
         System.out.println("v akturalizaci labelu");
-        roundLabel.setText("Kolo číslo: " + GameState.getInstance().pocetOdehranychKol);
+        roundLabel.setText("Kolo číslo: " + GameState.getInstance().numberOfPlayedRounds);
         //stavLabel.setText("stavHry: " + pocetOdehranychKol);
-        stavLabel.setText("<html>Výher: " + GameState.getInstance().pocetVyhranychKol + "<br>" + "Proher:"
-                + GameState.getInstance().pocetProhranychKol
-                + "<br>" +"Remíz:" + GameState.getInstance().pocetRemiz + "</html>");
+        stavLabel.setText("<html>Výher: " + GameState.getInstance().numberOfWonRounds + "<br>" + "Proher:"
+                + GameState.getInstance().numberOfLostRounds
+                + "<br>" +"Remíz:" + GameState.getInstance().numberOfSM + "</html>");
     }
 
     @Override

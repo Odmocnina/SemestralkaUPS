@@ -1,19 +1,17 @@
 package upsSP.GUI;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class AfterTurnWindow extends JPanel implements Connection.IListenerAfterTurn {
     public AfterTurnWindow(Window window) {
         GridBagLayout grid = new GridBagLayout();
         setLayout(grid);
-        setBackground(Konstanty.BARVA_POZADI);
+        setBackground(Constants.BACKGROUND_COLOR);
 
         GridBagConstraints gridBorders = new GridBagConstraints();
         gridBorders.insets = new Insets(7, 7, 7, 7);
@@ -47,8 +45,8 @@ public class AfterTurnWindow extends JPanel implements Connection.IListenerAfter
     public void onMessage(String message) {
         if (message.startsWith("Mess:gameResult:")) {
             System.out.println("Zprava identifikovana jako vysledek hry");
-            OknoZhodnoceniHry.setParametry(message);
-            OknoZhodnoceniHry.aktualizujLably();
+            GameEvaluationScreen.setGameState(message);
+            GameEvaluationScreen.aktualizujLably();
         }
         if (message.startsWith("Mess:bothPlayerTurn:")) {
             System.out.println("Zprava identifikovana jako oba hraci hrali");

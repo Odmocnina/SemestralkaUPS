@@ -1,6 +1,6 @@
 package upsSP.VolbyTahu;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,8 +37,8 @@ public class AbstractTurn {
         double offsetMezi = 0.37 * mensiStrana;
 
         realneX = (x - 1) * mensiStrana - sirka / 2
-                + Konstanty.OFFSET_Z_STRANY + (x - 1) * offsetMezi;
-        relaneY = (y - 1) * mensiStrana - vyska / 2 + Konstanty.OFFSET_Z_HORA + (y - 1) * offsetMezi;;
+                + Constants.OFFSET_FROM_SIDE + (x - 1) * offsetMezi;
+        relaneY = (y - 1) * mensiStrana - vyska / 2 + Constants.OFFSET_FORM_UP + (y - 1) * offsetMezi;;
 
         System.out.println("realneX: " + realneX + " relaneY: " + relaneY + " mensiStrana: " + mensiStrana);
 
@@ -47,7 +47,7 @@ public class AbstractTurn {
 
         g.setColor(Color.CYAN);
         g.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        g.drawString(nazev, (int)realneX + Konstanty.OFFSET_OBRAZKU, (int)relaneY + Konstanty.OFFSET_OBRAZKU);
+        g.drawString(nazev, (int)realneX + Constants.OFFSET_IMAGE_OF_TURN, (int)relaneY + Constants.OFFSET_IMAGE_OF_TURN);
 
         // Vykreslení obrázku na zadané souřadnice
         //g.drawImage(kamen, (int)realneX + Konstanty.OFFSET_OBRAZKU, (int)relaneY + Konstanty.OFFSET_OBRAZKU, null);
@@ -71,8 +71,8 @@ public class AbstractTurn {
         double vyskaBunky = vyska / pocetRadku;
         mensiStrana = Math.min(sirkaBunky, vyskaBunky);
         double offsetMezi = 0.37 * mensiStrana;
-        realneX = (x - 1) * mensiStrana - Konstanty.SIRKA_OKNA / 2
-                + Konstanty.OFFSET_Z_STRANY + (x - 1) * offsetMezi;
-        relaneY = (y - 1) * mensiStrana - Konstanty.VYSKA_OKNA / 2 + Konstanty.OFFSET_Z_HORA + (y - 1) * offsetMezi;;
+        realneX = (x - 1) * mensiStrana - Constants.WIDTH_STOCK / 2
+                + Constants.OFFSET_FROM_SIDE + (x - 1) * offsetMezi;
+        relaneY = (y - 1) * mensiStrana - Constants.HEIGHT_STOCK / 2 + Constants.OFFSET_FORM_UP + (y - 1) * offsetMezi;;
     }
 }

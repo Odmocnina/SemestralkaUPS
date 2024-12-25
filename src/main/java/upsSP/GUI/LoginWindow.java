@@ -1,6 +1,6 @@
 package upsSP.GUI;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 
 import javax.swing.*;
@@ -11,59 +11,59 @@ import java.io.IOException;
 
 public class LoginWindow extends JPanel {
 
-    public LoginWindow(Window okno) {
+    public LoginWindow(Window window) {
         GridBagLayout mriz = new GridBagLayout();
         setLayout(mriz);
-        setBackground(Konstanty.BARVA_POZADI);
+        setBackground(Constants.BACKGROUND_COLOR);
 
-        GridBagConstraints hraniceMrize = new GridBagConstraints();
-        hraniceMrize.insets = new Insets(7, 7, 7, 7);
-        hraniceMrize.fill = GridBagConstraints.BOTH;
-        hraniceMrize.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gridBorders = new GridBagConstraints();
+        gridBorders.insets = new Insets(7, 7, 7, 7);
+        gridBorders.fill = GridBagConstraints.BOTH;
+        gridBorders.anchor = GridBagConstraints.WEST;
 
         // Přidání popisku pro jméno
         JLabel nameLabel = new JLabel("Jméno:");
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 0;
-        add(nameLabel, hraniceMrize);
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 0;
+        add(nameLabel, gridBorders);
 
         // Přidání textového pole pro zadání jména
         JTextField jmenoTextField = new JTextField(15);
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 0;
-        add(jmenoTextField, hraniceMrize);
+        gridBorders.gridx = 1;
+        gridBorders.gridy = 0;
+        add(jmenoTextField, gridBorders);
 
         JLabel ipLabel = new JLabel("ip:");
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 1;
-        add(ipLabel, hraniceMrize);
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 1;
+        add(ipLabel, gridBorders);
 
         JTextField ipTextField = new JTextField("localhost", 15);
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 1;
-        add(ipTextField, hraniceMrize);
+        gridBorders.gridx = 1;
+        gridBorders.gridy = 1;
+        add(ipTextField, gridBorders);
 
         JLabel portLabel = new JLabel("port:");
-        hraniceMrize.gridx = 0;
-        hraniceMrize.gridy = 2;
-        add(portLabel, hraniceMrize);
+        gridBorders.gridx = 0;
+        gridBorders.gridy = 2;
+        add(portLabel, gridBorders);
 
         JTextField portTextField = new JTextField("10000", 15);
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 2;
-        add(portTextField, hraniceMrize);
+        gridBorders.gridx = 1;
+        gridBorders.gridy = 2;
+        add(portTextField, gridBorders);
 
         // Přidání tlačítka pro potvrzení
         JButton potvrditButton = new JButton("Potvrdit");
-        hraniceMrize.gridx = 1;
-        hraniceMrize.gridy = 3;
-        add(potvrditButton, hraniceMrize);
+        gridBorders.gridx = 1;
+        gridBorders.gridy = 3;
+        add(potvrditButton, gridBorders);
 
         // Přidání prázdného sloupce napravo, aby se komponenty netáhly
-        hraniceMrize.gridx = 2;
-        hraniceMrize.gridy = 0;
-        hraniceMrize.weightx = 1;  // Prázdný prostor pro roztažení
-        add(Box.createHorizontalStrut(1), hraniceMrize);
+        gridBorders.gridx = 2;
+        gridBorders.gridy = 0;
+        gridBorders.weightx = 1;  // Prázdný prostor pro roztažení
+        add(Box.createHorizontalStrut(1), gridBorders);
 
         potvrditButton.addActionListener(new ActionListener() {
             @Override
@@ -74,10 +74,11 @@ public class LoginWindow extends JPanel {
                         JOptionPane.showMessageDialog(null, "Jméno moc dlouhé!", "Chyba",
                                 JOptionPane.ERROR_MESSAGE);
                     } else {
-                        Connection spoj = Connection.getInstance();
-                        spoj.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
-                        String responce = spoj.sendMessage("Mess:login:" + jmenoTextField.getText() + ":\n");
-                        okno.zobrazHru("Cekani");
+                        Connection connection = Connection.getInstance();
+                        connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
+                        String responce = connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
+                        connection.sendingPingToServer();
+                        window.zobrazHru("poLoginu");
                     }
                 } catch (NumberFormatException e2) {
                     JOptionPane.showMessageDialog(null, "Port musí být číslo!", "Chyba",
@@ -90,10 +91,10 @@ public class LoginWindow extends JPanel {
             }
         });
 
-        hraniceMrize.gridx = 2;
-        hraniceMrize.gridy = 0;
-        hraniceMrize.weightx = 1;
-        add(Box.createHorizontalStrut(1), hraniceMrize);
+        gridBorders.gridx = 2;
+        gridBorders.gridy = 0;
+        gridBorders.weightx = 1;
+        add(Box.createHorizontalStrut(1), gridBorders);
     }
 
     @Override

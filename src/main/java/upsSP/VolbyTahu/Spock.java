@@ -1,6 +1,6 @@
 package upsSP.VolbyTahu;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 
 public class Spock implements ITurn {
 
@@ -17,6 +17,6 @@ public class Spock implements ITurn {
     }
 
     public int getValue() {
-        return Konstanty.HODNOTA_SPOCK;
+        return Constants.SPOCK_VALUE;
     }
 }

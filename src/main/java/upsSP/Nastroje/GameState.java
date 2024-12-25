@@ -2,11 +2,11 @@ package upsSP.Nastroje;
 
 public class GameState {
 
-    public int pocetOdehranychKol = 0;
+    public int numberOfPlayedRounds = 0;
 
-    public int pocetVyhranychKol = 0;
-    public int pocetProhranychKol = 0;
-    public int pocetRemiz = 0;
+    public int numberOfWonRounds = 0;
+    public int numberOfLostRounds = 0;
+    public int numberOfSM = 0;
     public boolean gameInProgress = true;
 
     static GameState instance;
@@ -22,12 +22,13 @@ public class GameState {
     }
 
     public void setScores(int numberOfRounds, int numberOfStalemates, int numberOfWins) {
-        System.out.println("v metode");
-        pocetOdehranychKol = numberOfRounds;
-        pocetRemiz = numberOfStalemates;
-        pocetVyhranychKol = numberOfWins;
-        pocetProhranychKol = numberOfRounds - numberOfWins - numberOfStalemates;
-        System.out.println("nastavene hodnoty " + pocetOdehranychKol + " " + pocetVyhranychKol + " " + pocetProhranychKol);
+        //System.out.println("v metode");
+        numberOfPlayedRounds = numberOfRounds;
+        numberOfSM = numberOfStalemates;
+        numberOfWonRounds = numberOfWins;
+        numberOfLostRounds = numberOfRounds - numberOfWins - numberOfStalemates;
+        //System.out.println("nastavene hodnoty " + numberOfPlayedRounds + " " + numberOfWonRounds + " "
+        //        + numberOfLostRounds);
     }
 
 }

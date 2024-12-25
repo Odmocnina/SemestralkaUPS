@@ -1,6 +1,6 @@
 package upsSP.VolbyTahu;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 
 public class Lizard implements ITurn {
 
@@ -17,6 +17,6 @@ public class Lizard implements ITurn {
     }
 
     public int getValue() {
-        return Konstanty.HODNOTA_TAPIR;
+        return Constants.LIZZARD_VALUE;
     }
 }

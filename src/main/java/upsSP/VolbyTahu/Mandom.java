@@ -1,6 +1,6 @@
 package upsSP.VolbyTahu;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 import java.util.Random;
 
 public class Mandom implements ITurn {
@@ -20,6 +20,6 @@ public class Mandom implements ITurn {
     public int getValue() {
         //java.util.Random nahoda = new java.util.Random();
         Random random = new Random();
-        return random.nextInt(Konstanty.POCET_MOZNOSTI) + 1;
+        return random.nextInt(Constants.NUMBER_OF_TURNS) + 1;
     }
 }

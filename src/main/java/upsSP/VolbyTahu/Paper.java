@@ -1,6 +1,6 @@
 package upsSP.VolbyTahu;
 
-import upsSP.Nastroje.Konstanty;
+import upsSP.Nastroje.Constants;
 
 public class Paper implements ITurn {
 
@@ -17,6 +17,6 @@ public class Paper implements ITurn {
     }
 
     public int getValue() {
-        return Konstanty.HODNOTA_PAPIR;
+        return Constants.PAPER_VALUE;
     }
 }
