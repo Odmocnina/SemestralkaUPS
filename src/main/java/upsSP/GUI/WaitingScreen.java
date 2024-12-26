@@ -3,6 +3,7 @@ package upsSP.GUI;
 import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.Nastroje.GameState;
+import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +61,8 @@ public class WaitingScreen extends JPanel implements Connection.IListenerInQueue
                     String responce = connection.sendMessage("Mess:logout:" + connection.clientId + ":");
                     //System.out.println("Odpoved serveru: " + responce);
                     Connection.getInstance().closeConnection();
-                    window.zobrazHru("Login");
+                    window.zobrazHru("login");
+                    GameState.getInstance().setState(States.LOGIN);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -73,7 +75,7 @@ public class WaitingScreen extends JPanel implements Connection.IListenerInQueue
         if (message.startsWith("Mess:gameBegin:")) {
             System.out.println("Zprava identifikovana jako start hry");
             Window window = (Window) SwingUtilities.getWindowAncestor(this);
-            window.zobrazHru("Game");
+            window.zobrazHru("game");
             GameEvaluationScreen.nextRoundButton.setText("Další kolo");
             GameState.getInstance().gameInProgress = true;
         }

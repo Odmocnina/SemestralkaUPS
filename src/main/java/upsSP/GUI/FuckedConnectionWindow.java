@@ -1,7 +1,6 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Constants;
-import upsSP.Nastroje.GameState;
 import upsSP.Server.Connection;
 import upsSP.Nastroje.States;
 
@@ -9,8 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class AfterTurnWindow extends JPanel implements Connection.IListenerAfterTurn {
-    public AfterTurnWindow(Window window) {
+public class FuckedConnectionWindow extends JPanel {
+    public FuckedConnectionWindow(Window window) {
         GridBagLayout grid = new GridBagLayout();
         setLayout(grid);
         setBackground(Constants.BACKGROUND_COLOR);
@@ -25,7 +24,7 @@ public class AfterTurnWindow extends JPanel implements Connection.IListenerAfter
         gridBorders.gridwidth = GridBagConstraints.REMAINDER;
 
         // Vytvoření nápisu
-        JLabel text = new JLabel("Čekání na tah protihráče...");
+        JLabel text = new JLabel("Něco se skurvilo...");
         text.setForeground(Color.WHITE); // Nastavení barvy textu
         text.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
 
@@ -33,28 +32,5 @@ public class AfterTurnWindow extends JPanel implements Connection.IListenerAfter
         gridBorders.gridy = 0;
 
         add(text, gridBorders);
-
-        try {
-            Connection.getInstance().addListnerAfterTurn(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
-    @Override
-    public void onMessage(String message) {
-        if (message.startsWith("Mess:gameResult:")) {
-            System.out.println("Zprava identifikovana jako vysledek hry");
-            GameEvaluationScreen.setGameState(message);
-            GameEvaluationScreen.aktualizujLably();
-        }
-        if (message.startsWith("Mess:bothPlayerTurn:")) {
-            System.out.println("Zprava identifikovana jako oba hraci hrali");
-            Window window = (Window) SwingUtilities.getWindowAncestor(this);
-            window.zobrazHru("gameJudgement");
-        }
     }
 }
-

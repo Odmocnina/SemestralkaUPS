@@ -3,6 +3,7 @@ package upsSP.GUI;
 import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.Nastroje.GameState;
+import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,9 +72,9 @@ public class GameEvaluationScreen extends JPanel implements Connection.IListener
                 }*/
                 window.aktializujLably();
                 if (GameState.getInstance().gameInProgress) {
-                    window.zobrazHru("Game");
+                    window.zobrazHru("game");
                 } else {
-                    window.zobrazHru("Cekani");
+                    window.zobrazHru("wait");
                     try {
                         Connection.getInstance().sendMessage("Mess:game:" + Connection.getInstance().clientId + ":");
                         //GameState.getInstance().setScores(0, 0, 0);

@@ -1,7 +1,11 @@
 package upsSP.Server;
 
+import upsSP.GUI.Informator;
+
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
@@ -25,6 +29,11 @@ public class Connection {
 
     private IListenerInJudgement listenerInJudgement;
     private IListenerAfterLogin listenerAfterLogin;
+    private long time;
+    boolean connected = false;
+    int numberOfPings = 0;
+    int numberOfPongs = 0;
+    Lock lock = new ReentrantLock();
 
     // Soukromý konstruktor
     private Connection() {
@@ -60,18 +69,19 @@ public class Connection {
     // Metoda pro uzavření spojení
     public void closeConnection() {
         try {
-            sleep(1000); //sleep na dozpracovavani zprav co jsou mozny ze jsou jeste v prubehu
             stopLisening();
             stopPinging();
+            sleep(1000); //sleep na dozpracovavani zprav co jsou mozny ze jsou jeste v prubehu;
+            if (socket != null) {
+                socket.close();
+            }
             if (in != null) {
                 in.close();
             }
             if (out != null) {
                 out.close();
             }
-            if (socket != null) {
-                socket.close();
-            }
+            resetConnectionParametres();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -91,6 +101,7 @@ public class Connection {
         this.socket = new Socket(adress, port);
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        setIsConnected(true);
         liseningMessegesFromServer();
         //sendingPingToServer();
     }
@@ -99,10 +110,30 @@ public class Connection {
         isLisening = true;
         System.out.println("Lisening...");
         lisenThread = new Thread(() -> {
-            while (isLisening) {
-                try {
-                    String message = acceptMessage();
+            while (getIsLisening()) {
+                //try {
+                    String message;
+                    try {
+                        message = acceptMessage();
+                    } catch (IOException cs) {
+                        if (getIsLisening()) {
+                            cs.printStackTrace();
+                        } else {
+                            System.out.println("Poslochani bylo zastaveno");
+                        }
+                        break;
+                    }
                     System.out.println("Prijata zprava: " + message);
+                    setTime(System.currentTimeMillis());
+                    if (message.startsWith("Mess:pong:")) {
+                        if (isConnected()) {
+                            setNumberOfPongs(getNumberOfPongs() + 1);
+                        } else {
+                            setIsConnected(true);
+                            setNumberOfPongs(getNumberOfPongs() + 1);
+                            Informator.getInstance(null).repairGame();
+                        }
+                    }
                     if (listenerAfterLogin != null && message != null) {
                         //System.out.print("Prijata zprava: " + message + "\n");
                         listenerAfterLogin.onMessage(message);
@@ -122,9 +153,9 @@ public class Connection {
                     /*if (message.equals("Mess:břong")) {
                         pong();
                     }*/
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                //} //catch (IOException e) {
+                    //e.printStackTrace();
+                //}
             }
         });
         lisenThread.start();
@@ -136,8 +167,22 @@ public class Connection {
         pingThread = new Thread(() -> {
             while (isSending) {
                 try {
+                    System.out.println("Pocet pingu: " + getNumberOfPings() + " Pocet pongu: " + getNumberOfPongs());
+                    //long timeNow = System.currentTimeMillis();
+                    //if (Math.abs(getTime() - timeNow) > 50000 && !connected) {
+                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > 10 && !isConnected()) {
+                        closeConnection();
+                        Informator.getInstance(null).informAboutTimeout();
+                    }
+                    //if (Math.abs(getTime() - timeNow) > 5000 && isConnected() == true) { //pokud jeden ping ne tak spatny
+                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) >= 1 && isConnected() == true) { //pokud jeden ping ne tak spatny
+                        System.out.println("Problem s spojenim");
+                        setIsConnected(false);
+                        Informator.getInstance(null).informAboutFuckedConnection();
+                    }
+                    setNumberOfPings(getNumberOfPings() + 1);
                     sendMessage("Mess:ping:" + clientId +":");
-                    sleep(5000);
+                    sleep(1000);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -151,10 +196,10 @@ public class Connection {
     }
 
     private void stopLisening() {
-        isLisening = false;
+        setIsLisening(false);
         //sleep();
     }
-    private void stopPinging() {
+    private void  stopPinging() {
         isSending = false;
     }
     public interface IListenerInQueue {
@@ -199,6 +244,108 @@ public class Connection {
 
     public void addListnerInJudgement(IListenerInJudgement listenerInJudgement) {
         this.listenerInJudgement = listenerInJudgement;
+    }
+
+    // Getter a setter pro time
+    public long getTime() {
+        lock.lock();
+        try {
+            return time;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setTime(long time) {
+        lock.lock();
+        try {
+            this.time = time;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // Getter a setter pro connected
+    public boolean isConnected() {
+        lock.lock();
+        try {
+            return connected;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setIsConnected(boolean connected) {
+        lock.lock();
+        try {
+            this.connected = connected;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // Getter pro numberOfPings
+    public int getNumberOfPings() {
+        lock.lock();
+        try {
+            return numberOfPings;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // Inkrementace numberOfPings o parametr
+    public void setNumberOfPings(int numberOfPings) {
+        lock.lock();
+        try {
+            this.numberOfPings = numberOfPings;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // Getter pro numberOfPongs
+    public int getNumberOfPongs() {
+        lock.lock();
+        try {
+            return numberOfPongs;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // Inkrementace numberOfPongs o parametr
+    public void setNumberOfPongs(int numberOfPongs) {
+        lock.lock();
+        try {
+            this.numberOfPongs = numberOfPongs;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean getIsLisening() {
+        lock.lock();
+        try {
+            return this.isLisening;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setIsLisening(boolean isLisening) {
+        lock.lock();
+        try {
+            this.isLisening = isLisening;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void resetConnectionParametres() {
+        setNumberOfPings(0);
+        setNumberOfPongs(0);
+        setIsConnected(false);
     }
 
 }

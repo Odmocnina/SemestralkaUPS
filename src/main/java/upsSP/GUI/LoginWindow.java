@@ -1,7 +1,9 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Constants;
+import upsSP.Nastroje.GameState;
 import upsSP.Server.Connection;
+import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +80,7 @@ public class LoginWindow extends JPanel {
                         connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
                         String responce = connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
                         connection.sendingPingToServer();
-                        window.zobrazHru("poLoginu");
+                        window.zobrazHru("wait");
                     }
                 } catch (NumberFormatException e2) {
                     JOptionPane.showMessageDialog(null, "Port musí být číslo!", "Chyba",

@@ -10,6 +10,7 @@ public class GameState {
     public boolean gameInProgress = true;
 
     static GameState instance;
+    public States stateOfGame;
     private GameState() {
 
     }
@@ -29,6 +30,12 @@ public class GameState {
         numberOfLostRounds = numberOfRounds - numberOfWins - numberOfStalemates;
         //System.out.println("nastavene hodnoty " + numberOfPlayedRounds + " " + numberOfWonRounds + " "
         //        + numberOfLostRounds);
+    }
+
+    public void setState(States state) {
+        if (state != null) {
+            this.stateOfGame = state;
+        }
     }
 
 }

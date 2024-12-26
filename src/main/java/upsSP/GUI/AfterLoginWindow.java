@@ -1,7 +1,9 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Constants;
+import upsSP.Nastroje.GameState;
 import upsSP.Server.Connection;
+import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,11 +56,11 @@ public class AfterLoginWindow extends JPanel implements Connection.IListenerAfte
                             JOptionPane.ERROR_MESSAGE);
                     Connection.getInstance().closeConnection();
                     Window window = (Window) SwingUtilities.getWindowAncestor(this);
-                    window.zobrazHru("Login");
+                    window.zobrazHru("login");
                 } else {
                     Connection.getInstance().clientId = Integer.parseInt(id);
                     Window window = (Window) SwingUtilities.getWindowAncestor(this);
-                    window.zobrazHru("Cekani");
+                    window.zobrazHru("wait");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

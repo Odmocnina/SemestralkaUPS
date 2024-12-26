@@ -4,6 +4,7 @@ import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.VolbyTahu.*;
 import upsSP.Nastroje.GameState;
+import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +117,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
                     throw new RuntimeException(ex);
                 }
                 GameEvaluationScreen.valueTurn = turnValue;
-                window.zobrazHru("PoTahu");
+                window.zobrazHru("afterPlay");
             }
         });
     }
@@ -139,7 +140,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         if (message.startsWith("Mess:turn:")) {
             System.out.println("Zprava identifikovana jako tah");
             Window window = (Window) SwingUtilities.getWindowAncestor(this);
-            window.zobrazHru("zhodnoceniHry");
+            window.zobrazHru("gameJudgement");
         }
     }
 }
