@@ -1,6 +1,8 @@
 package upsSP.Server;
 
+import upsSP.GUI.GameWindow;
 import upsSP.GUI.Informator;
+import upsSP.Nastroje.GameState;
 
 import java.io.*;
 import java.net.*;
@@ -21,7 +23,7 @@ public class Connection {
     private Thread lisenThread, pingThread;
 
     public int clientId;
-    private IListenerInQueue listenerÍnQueue;
+    private IListenerInQueue lisenerInQueue;
 
     private IListenerInGame listenerInGame;
 
@@ -34,6 +36,7 @@ public class Connection {
     int numberOfPings = 0;
     int numberOfPongs = 0;
     Lock lock = new ReentrantLock();
+    boolean gameStopped = false;
 
     // Soukromý konstruktor
     private Connection() {
@@ -112,16 +115,19 @@ public class Connection {
         lisenThread = new Thread(() -> {
             while (getIsLisening()) {
                 //try {
-                    String message;
-                    try {
-                        message = acceptMessage();
-                    } catch (IOException cs) {
+                String message;
+                try {
+                    message = acceptMessage();
+                    /*} catch (IOException cs) {
                         if (getIsLisening()) {
                             cs.printStackTrace();
                         } else {
                             System.out.println("Poslochani bylo zastaveno");
                         }
                         break;
+                    }*/
+                    if (message == null) {
+                        continue;
                     }
                     System.out.println("Prijata zprava: " + message);
                     setTime(System.currentTimeMillis());
@@ -134,22 +140,32 @@ public class Connection {
                             Informator.getInstance(null).repairGame();
                         }
                     }
+                    if (message.startsWith("Mess:opponentConnectionProblems:")) {
+                        Informator.getInstance(null).informAboutOpponentsFuckedConnection(1);
+                    } else if (message.startsWith("Mess:opponentConnectionGood:")) {
+                        Informator.getInstance(null).repairGame();
+                    } else if (message.startsWith("Mess:opponentConnectionFall:")) {
+                        GameState.getInstance().setScores(0, 0, 0);
+                        Informator.getInstance(null).informAboutOpponentsFuckedConnection(-1);
+                    }
                     if (listenerAfterLogin != null && message != null) {
-                        //System.out.print("Prijata zprava: " + message + "\n");
                         listenerAfterLogin.onMessage(message);
                     }
-                    if (listenerÍnQueue != null && message != null) {
-                        //System.out.print("Prijata zprava: " + message + "\n");
-                        listenerÍnQueue.onMessage(message);
+                    if (lisenerInQueue != null && message != null) {
+                        lisenerInQueue.onMessage(message);
                     }
-                    //if (listenerInGame != null && message != null) {
-                        //System.out.print("Prijata zprava: " + message + "\n");
-                        //listenerInGame.onMessage(message);
-                    //}
                     if (listenerAfterTurn != null && message != null) {
                         //System.out.print("Prijata zprava: " + message + "\n");
                         listenerAfterTurn.onMessage(message);
                     }
+                } catch (IOException cs) {
+                    if (getIsLisening()) {
+                        cs.printStackTrace();
+                    } else {
+                        System.out.println("Poslochani bylo zastaveno");
+                    }
+                    break;
+                }
                     /*if (message.equals("Mess:břong")) {
                         pong();
                     }*/
@@ -170,9 +186,11 @@ public class Connection {
                     System.out.println("Pocet pingu: " + getNumberOfPings() + " Pocet pongu: " + getNumberOfPongs());
                     //long timeNow = System.currentTimeMillis();
                     //if (Math.abs(getTime() - timeNow) > 50000 && !connected) {
-                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > 10 && !isConnected()) {
+                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > 51 && !isConnected()) {
+                        GameState.getInstance().setScores(0, 0, 0);
                         closeConnection();
                         Informator.getInstance(null).informAboutTimeout();
+                        break;
                     }
                     //if (Math.abs(getTime() - timeNow) > 5000 && isConnected() == true) { //pokud jeden ping ne tak spatny
                     if (Math.abs(getNumberOfPongs() - getNumberOfPings()) >= 1 && isConnected() == true) { //pokud jeden ping ne tak spatny
@@ -227,7 +245,7 @@ public class Connection {
 //    }
 
     public void addListnerInQueue(IListenerInQueue listenerInQueue) {
-        this.listenerÍnQueue = listenerInQueue;
+        this.lisenerInQueue = listenerInQueue;
     }
 
     public void addListnerInGame(IListenerInGame listenerInGame) {

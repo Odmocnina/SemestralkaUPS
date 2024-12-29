@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class AfterLoginWindow extends JPanel implements Connection.IListenerAfterLogin {
+
     JButton button;
 
     public AfterLoginWindow(Window window) {

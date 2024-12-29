@@ -17,7 +17,7 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
 
     ITurn[] turns = new ITurn[Constants.NUMBER_OF_TURNS + 1];
 
-    JLabel roundLabel, stavLabel;
+    static JLabel roundLabel, stavLabel;
 
     public GameWindow(Window window) {
         ITurn stone = new Stone();
@@ -126,13 +126,14 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
         this.pocetOdehranychKol = this.pocetOdehranychKol + 1;
     }*/
 
-    public void updateLabes() {
+    public static void updateLabes() {
         System.out.println("v akturalizaci labelu");
         roundLabel.setText("Kolo číslo: " + GameState.getInstance().numberOfPlayedRounds);
         //stavLabel.setText("stavHry: " + pocetOdehranychKol);
+        //if (stavLabel != null) {
         stavLabel.setText("<html>Výher: " + GameState.getInstance().numberOfWonRounds + "<br>" + "Proher:"
                 + GameState.getInstance().numberOfLostRounds
-                + "<br>" +"Remíz:" + GameState.getInstance().numberOfSM + "</html>");
+                + "<br>" + "Remíz:" + GameState.getInstance().numberOfSM + "</html>");
     }
 
     @Override

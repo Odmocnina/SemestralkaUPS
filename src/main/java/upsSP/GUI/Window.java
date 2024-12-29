@@ -27,6 +27,8 @@ public class Window extends JFrame {
         WaitingScreen waiting = new WaitingScreen(this);
         AfterLoginWindow afterLogin = new AfterLoginWindow(this);
         FuckedConnectionWindow fuckedConnection = new FuckedConnectionWindow(this);
+        FuckedConnectionOpponentScreen fuckedConnectionOpponentScreen = new FuckedConnectionOpponentScreen(this);
+
 
         mainWindow.add("login", login);
         //mainWindow.add("Lobby", lobby);
@@ -36,6 +38,7 @@ public class Window extends JFrame {
         mainWindow.add("afterPlay", afterTurn);
         mainWindow.add("afterLogin", afterLogin);
         mainWindow.add("fuckedConnection", fuckedConnection);
+        mainWindow.add("opponentsFuckedConnection", fuckedConnectionOpponentScreen);
 
         add(mainWindow);
         setTitle("Kamen nuzky papir tapir spock");

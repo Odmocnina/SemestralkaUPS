@@ -104,23 +104,25 @@ public class GameEvaluationScreen extends JPanel implements Connection.IListener
     }
 
     public static void aktualizujLably() {
-        turnLabel.setText("Zvolil jste: " + ziskejNazevZHodnoty(valueTurn));
-        opponentTurnLabel.setText("Protivník zvolil: " + ziskejNazevZHodnoty(opponentTurnValue));
-        resultRoundLabel.setText("Výsledek kola: " + roundResult);
-        if (GameState.getInstance().numberOfWonRounds == Constants.NUMBER_OF_ROUNDS) {
-            gameResultLabel.setText("Výsledek hry: Vyhrál si");
-            nextRoundButton.setText("Zpátky do fronty");
-            GameState.getInstance().gameInProgress = false;
-            GameState.getInstance().setScores(0, 0, 0);
-        } else if (GameState.getInstance().numberOfLostRounds == Constants.NUMBER_OF_ROUNDS) {
-            gameResultLabel.setText("Výsledek hry: Prohrál si");
-            //dalsiKoloButton.setText("Zpátky na login");
-            nextRoundButton.setText("Zpátky do fronty");
-            GameState.getInstance().gameInProgress = false;
-            GameState.getInstance().setScores(0, 0, 0);
-        } else {
-            gameResultLabel.setText("Výsledek hry: V průběhu hry");
-        }
+        //if (opponentTurnLabel != null) {
+            turnLabel.setText("Zvolil jste: " + ziskejNazevZHodnoty(valueTurn));
+            opponentTurnLabel.setText("Protivník zvolil: " + ziskejNazevZHodnoty(opponentTurnValue));
+            resultRoundLabel.setText("Výsledek kola: " + roundResult);
+            if (GameState.getInstance().numberOfWonRounds == Constants.NUMBER_OF_ROUNDS) {
+                gameResultLabel.setText("Výsledek hry: Vyhrál si");
+                nextRoundButton.setText("Zpátky do fronty");
+                GameState.getInstance().gameInProgress = false;
+                GameState.getInstance().setScores(0, 0, 0);
+            } else if (GameState.getInstance().numberOfLostRounds == Constants.NUMBER_OF_ROUNDS) {
+                gameResultLabel.setText("Výsledek hry: Prohrál si");
+                //dalsiKoloButton.setText("Zpátky na login");
+                nextRoundButton.setText("Zpátky do fronty");
+                GameState.getInstance().gameInProgress = false;
+                GameState.getInstance().setScores(0, 0, 0);
+            } else {
+                gameResultLabel.setText("Výsledek hry: V průběhu hry");
+            }
+        //}
     }
 
     public static void setGameState(String message) {
