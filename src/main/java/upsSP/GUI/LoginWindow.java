@@ -80,7 +80,7 @@ public class LoginWindow extends JPanel {
                         connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
                         String responce = connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
                         connection.sendingPingToServer();
-                        window.zobrazHru("wait");
+                        window.zobrazHru("help");
                     }
                 } catch (NumberFormatException e2) {
                     JOptionPane.showMessageDialog(null, "Port musí být číslo!", "Chyba",

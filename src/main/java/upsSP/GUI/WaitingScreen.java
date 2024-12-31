@@ -60,9 +60,9 @@ public class WaitingScreen extends JPanel implements Connection.IListenerInQueue
                     Connection connection = Connection.getInstance();
                     String responce = connection.sendMessage("Mess:logout:" + connection.clientId + ":");
                     //System.out.println("Odpoved serveru: " + responce);
-                    Connection.getInstance().closeConnection();
-                    window.zobrazHru("login");
-                    GameState.getInstance().setState(States.LOGIN);
+                    //Connection.getInstance().closeConnection();
+                    window.zobrazHru("help");
+                    //GameState.getInstance().setState(States.LOGIN);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

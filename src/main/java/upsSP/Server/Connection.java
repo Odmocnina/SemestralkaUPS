@@ -148,6 +148,11 @@ public class Connection {
                         GameState.getInstance().setScores(0, 0, 0);
                         Informator.getInstance(null).informAboutOpponentsFuckedConnection(-1);
                     }
+                    if (message.startsWith("Mess:invalidMessage:")) {
+                        System.out.println("Nevlaidni zprva poslana, odpojuji");
+                        GameState.getInstance().setScores(0,0, 0);
+                        Informator.getInstance(null).informAboutInvalidMessage();
+                    }
                     if (listenerAfterLogin != null && message != null) {
                         listenerAfterLogin.onMessage(message);
                     }

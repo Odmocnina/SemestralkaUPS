@@ -9,11 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class AfterLoginWindow extends JPanel implements Connection.IListenerAfterLogin {
+public class HelpWindow extends JPanel implements Connection.IListenerAfterLogin {
 
     JButton button;
 
-    public AfterLoginWindow(Window window) {
+    public HelpWindow(Window window) {
         GridBagLayout grid = new GridBagLayout();
         setLayout(grid);
         setBackground(Constants.BACKGROUND_COLOR);
@@ -28,7 +28,7 @@ public class AfterLoginWindow extends JPanel implements Connection.IListenerAfte
         gridBorders.gridwidth = GridBagConstraints.REMAINDER;
 
         // Vytvoření nápisu
-        JLabel text = new JLabel("Verifikace přihlášení...");
+        JLabel text = new JLabel("Chekuju");
         text.setForeground(Color.WHITE); // Nastavení barvy textu
         text.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
 
@@ -66,6 +66,17 @@ public class AfterLoginWindow extends JPanel implements Connection.IListenerAfte
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+        if (message.startsWith("Mess:logout:")) {
+            try {
+                Connection.getInstance().closeConnection();
+                Connection.getInstance().clientId = -1;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Window window = (Window) SwingUtilities.getWindowAncestor(this);
+            window.zobrazHru("login");
+            GameState.getInstance().setState(States.LOGIN);
         }
     }
 }

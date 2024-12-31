@@ -48,6 +48,16 @@ public class Informator {
         });
     }
 
+    public void informAboutInvalidMessage() {
+        GameEvaluationScreen.aktualizujLably();
+        GameWindow.updateLabes();
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(null, "Co mi to posíláš vole", "Chyba",
+                    JOptionPane.ERROR_MESSAGE);
+            window.zobrazHru("login");
+        });
+    }
+
     public int repairGame() {
         window.zobrazHru(window.StateToString(GameState.getInstance().stateOfGame));
         return 0;

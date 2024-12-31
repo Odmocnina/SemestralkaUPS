@@ -18,7 +18,7 @@ public class Constants {
     public static final int OFFSET_IMAGE_OF_TURN = 25;
     public static final String PATH_TO_DATA = "src/main/resources/data/";
     public static final double SOIOT = 60.0;
-    public static final int NUMBER_OF_ROUNDS = 3;
+    public static final int NUMBER_OF_ROUNDS = 5;
     public static final int SIZE_OF_LETTER_IN_EVALUATION = 20;
     public static final Color BACKGROUND_COLOR = new Color(0, 102, 0);
 }

@@ -25,7 +25,7 @@ public class Window extends JFrame {
         AfterTurnWindow afterTurn = new AfterTurnWindow(this);
         gameEvaluation = new GameEvaluationScreen(this);
         WaitingScreen waiting = new WaitingScreen(this);
-        AfterLoginWindow afterLogin = new AfterLoginWindow(this);
+        HelpWindow help = new HelpWindow(this);
         FuckedConnectionWindow fuckedConnection = new FuckedConnectionWindow(this);
         FuckedConnectionOpponentScreen fuckedConnectionOpponentScreen = new FuckedConnectionOpponentScreen(this);
 
@@ -36,7 +36,7 @@ public class Window extends JFrame {
         mainWindow.add("game", game);
         mainWindow.add("gameJudgement", gameEvaluation);
         mainWindow.add("afterPlay", afterTurn);
-        mainWindow.add("afterLogin", afterLogin);
+        mainWindow.add("help", help);
         mainWindow.add("fuckedConnection", fuckedConnection);
         mainWindow.add("opponentsFuckedConnection", fuckedConnectionOpponentScreen);
 
