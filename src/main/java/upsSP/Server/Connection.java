@@ -2,8 +2,11 @@ package upsSP.Server;
 
 import upsSP.GUI.GameWindow;
 import upsSP.GUI.Informator;
+import upsSP.GUI.Window;
 import upsSP.Nastroje.GameState;
+import upsSP.Nastroje.States;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.locks.Lock;
@@ -152,6 +155,13 @@ public class Connection {
                         System.out.println("Nevlaidni zprva poslana, odpojuji");
                         GameState.getInstance().setScores(0,0, 0);
                         Informator.getInstance(null).informAboutInvalidMessage();
+                    }
+                    if (message.startsWith("Mess:logout:")) {
+                        closeConnection();
+                        clientId = -1;
+                        Informator.getInstance(null).informToShow();
+                        GameState.getInstance().setScores(0,0, 0);
+                        GameState.getInstance().setState(States.LOGIN);
                     }
                     if (listenerAfterLogin != null && message != null) {
                         listenerAfterLogin.onMessage(message);

@@ -25,7 +25,7 @@ public class Window extends JFrame {
         AfterTurnWindow afterTurn = new AfterTurnWindow(this);
         gameEvaluation = new GameEvaluationScreen(this);
         WaitingScreen waiting = new WaitingScreen(this);
-        HelpWindow help = new HelpWindow(this);
+        InBetweenWindow help = new InBetweenWindow(this);
         FuckedConnectionWindow fuckedConnection = new FuckedConnectionWindow(this);
         FuckedConnectionOpponentScreen fuckedConnectionOpponentScreen = new FuckedConnectionOpponentScreen(this);
 

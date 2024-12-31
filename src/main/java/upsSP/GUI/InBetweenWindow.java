@@ -9,11 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class HelpWindow extends JPanel implements Connection.IListenerAfterLogin {
+public class InBetweenWindow extends JPanel implements Connection.IListenerAfterLogin {
 
     JButton button;
 
-    public HelpWindow(Window window) {
+    public InBetweenWindow(Window window) {
         GridBagLayout grid = new GridBagLayout();
         setLayout(grid);
         setBackground(Constants.BACKGROUND_COLOR);
@@ -66,17 +66,6 @@ public class HelpWindow extends JPanel implements Connection.IListenerAfterLogin
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-        if (message.startsWith("Mess:logout:")) {
-            try {
-                Connection.getInstance().closeConnection();
-                Connection.getInstance().clientId = -1;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Window window = (Window) SwingUtilities.getWindowAncestor(this);
-            window.zobrazHru("login");
-            GameState.getInstance().setState(States.LOGIN);
         }
     }
 }

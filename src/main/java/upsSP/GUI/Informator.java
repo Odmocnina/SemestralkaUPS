@@ -58,6 +58,10 @@ public class Informator {
         });
     }
 
+    public void informToShow() {
+        window.zobrazHru("login");
+    }
+
     public int repairGame() {
         window.zobrazHru(window.StateToString(GameState.getInstance().stateOfGame));
         return 0;
