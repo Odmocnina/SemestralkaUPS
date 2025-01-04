@@ -73,13 +73,18 @@ public class GameEvaluationScreen extends JPanel implements Connection.IListener
                 window.aktializujLably();
                 if (GameState.getInstance().gameInProgress) {
                     window.zobrazHru("game");
+                    try {
+                        Connection.getInstance().sendMessage("Mess:readyForNextRound:" + Connection.getInstance().clientId + ":");
+                    } catch (IOException eQ) {
+                        throw new RuntimeException(eQ);
+                    }
                 } else {
                     window.zobrazHru("wait");
                     try {
                         Connection.getInstance().sendMessage("Mess:game:" + Connection.getInstance().clientId + ":");
                         //GameState.getInstance().setScores(0, 0, 0);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    } catch (IOException eQ) {
+                        throw new RuntimeException(eQ);
                     }
                 }
             }

@@ -79,7 +79,7 @@ public class LoginWindow extends JPanel {
                         Connection connection = Connection.getInstance();
                         connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
                         String responce = connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
-                        connection.sendingPingToServer();
+                        //connection.sendingPingToServer();
                         window.zobrazHru("help");
                     }
                 } catch (NumberFormatException e2) {

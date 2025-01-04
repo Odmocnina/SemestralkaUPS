@@ -49,7 +49,7 @@ public class InBetweenWindow extends JPanel implements Connection.IListenerAfter
     @Override
     public void onMessage(String message) {
         if (message.startsWith("Mess:login:")) {
-            System.out.println("Zprava identifikovana jako login v po loginu");
+            //System.out.println("Zprava identifikovana jako login v po loginu");
             String id = message.split(":")[2];
             try {
                 if (Integer.parseInt(id) == -1) {

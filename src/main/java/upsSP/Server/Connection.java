@@ -3,8 +3,10 @@ package upsSP.Server;
 import upsSP.GUI.GameWindow;
 import upsSP.GUI.Informator;
 import upsSP.GUI.Window;
+import upsSP.Nastroje.Constants;
 import upsSP.Nastroje.GameState;
 import upsSP.Nastroje.States;
+import upsSP.Nastroje.Constants;
 
 import javax.swing.*;
 import java.io.*;
@@ -109,7 +111,7 @@ public class Connection {
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         setIsConnected(true);
         liseningMessegesFromServer();
-        //sendingPingToServer();
+        sendingPingToServer();
     }
 
     private void liseningMessegesFromServer() {
@@ -140,6 +142,7 @@ public class Connection {
                         } else {
                             setIsConnected(true);
                             setNumberOfPongs(getNumberOfPongs() + 1);
+                            //setConfiguration(port, adress);
                             Informator.getInstance(null).repairGame();
                         }
                     }
@@ -147,6 +150,7 @@ public class Connection {
                         Informator.getInstance(null).informAboutOpponentsFuckedConnection(1);
                     } else if (message.startsWith("Mess:opponentConnectionGood:")) {
                         Informator.getInstance(null).repairGame();
+
                     } else if (message.startsWith("Mess:opponentConnectionFall:")) {
                         GameState.getInstance().setScores(0, 0, 0);
                         Informator.getInstance(null).informAboutOpponentsFuckedConnection(-1);
@@ -201,7 +205,7 @@ public class Connection {
                     System.out.println("Pocet pingu: " + getNumberOfPings() + " Pocet pongu: " + getNumberOfPongs());
                     //long timeNow = System.currentTimeMillis();
                     //if (Math.abs(getTime() - timeNow) > 50000 && !connected) {
-                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > 51 && !isConnected()) {
+                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > Constants.NUMBER_OF_PINGS && !isConnected()) {
                         GameState.getInstance().setScores(0, 0, 0);
                         closeConnection();
                         Informator.getInstance(null).informAboutTimeout();
@@ -215,7 +219,7 @@ public class Connection {
                     }
                     setNumberOfPings(getNumberOfPings() + 1);
                     sendMessage("Mess:ping:" + clientId +":");
-                    sleep(1000);
+                    sleep(Constants.TIME_FOR_ONE_PING);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
