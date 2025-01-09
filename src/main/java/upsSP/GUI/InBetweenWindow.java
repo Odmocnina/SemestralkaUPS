@@ -1,17 +1,13 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Constants;
-import upsSP.Nastroje.GameState;
 import upsSP.Server.Connection;
-import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
 public class InBetweenWindow extends JPanel implements Connection.IListenerAfterLogin {
-
-    JButton button;
 
     public InBetweenWindow(Window window) {
         GridBagLayout grid = new GridBagLayout();

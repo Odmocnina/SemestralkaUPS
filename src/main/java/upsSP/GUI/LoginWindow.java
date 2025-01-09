@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
+
 public class LoginWindow extends JPanel {
 
     public LoginWindow(Window window) {
@@ -40,7 +42,7 @@ public class LoginWindow extends JPanel {
         gridBorders.gridy = 1;
         add(ipLabel, gridBorders);
 
-        JTextField ipTextField = new JTextField("localhost", 15);
+        JTextField ipTextField = new JTextField("147.228.67.105", 15);
         gridBorders.gridx = 1;
         gridBorders.gridy = 1;
         add(ipTextField, gridBorders);
@@ -72,23 +74,66 @@ public class LoginWindow extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Zavolej metodu pro zobrazení nové stránky
                 try {
-                    if (jmenoTextField.getText().length() > 15) {
+                    if (jmenoTextField.getText().length() > 9) {
                         JOptionPane.showMessageDialog(null, "Jméno moc dlouhé!", "Chyba",
                                 JOptionPane.ERROR_MESSAGE);
+                    } else if (jmenoTextField.getText().contains(":")) {
+                        JOptionPane.showMessageDialog(null, "Nepovolené znaky v jmeně!",
+                                "Chyba", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        Connection connection = Connection.getInstance();
-                        connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText());
-                        String responce = connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
-                        //connection.sendingPingToServer();
-                        window.zobrazHru("help");
+                        // Získání rodičovského okna
+                        java.awt.Window parentWindow = SwingUtilities.getWindowAncestor(LoginWindow.this);
+
+                        // Přetypování na správný typ
+                        JDialog waitingDialog;
+                        if (parentWindow instanceof Frame) {
+                            waitingDialog = new JDialog((Frame) parentWindow, "Čekání", true);
+                        } else if (parentWindow instanceof Dialog) {
+                            waitingDialog = new JDialog((Dialog) parentWindow, "Čekání", true);
+                        } else {
+                            throw new IllegalStateException("Rodičovské okno není typu Frame ani Dialog!");
+                        }
+
+                        waitingDialog.setLayout(new BorderLayout());
+                        waitingDialog.add(new JLabel("Připojuji k serveru, prosím čekejte..."), BorderLayout.CENTER);
+                        waitingDialog.setSize(300, 100);
+                        waitingDialog.setLocationRelativeTo(null);
+
+                        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                            boolean connected = true;
+                            @Override
+                            protected Void doInBackground() {
+                                // Nastavení připojení na pozadí
+                                try {
+                                    Connection connection = Connection.getInstance();
+                                    connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText(), true);
+                                    connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
+                                } catch (IOException e3) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "Nelze se připojit k serveru. Zkontrolujte IP adresu a port.",
+                                            "Chyba připojení", JOptionPane.ERROR_MESSAGE);
+                                    connected = false;
+                                    window.zobrazHru("login");
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                waitingDialog.dispose();
+                                if (connected) {
+                                    window.zobrazHru("help");
+                                }
+                            }
+                        };
+
+                        worker.execute();
+                        waitingDialog.setVisible(true);
                     }
                 } catch (NumberFormatException e2) {
                     JOptionPane.showMessageDialog(null, "Port musí být číslo!", "Chyba",
                             JOptionPane.ERROR_MESSAGE);
-                } catch (IOException e2) {
-                    JOptionPane.showMessageDialog(null,
-                            "Nelze se připojit k serveru. Zkontrolujte IP adresu a port.",
-                            "Chyba připojení", JOptionPane.ERROR_MESSAGE);
+                    window.zobrazHru("login");
                 }
             }
         });

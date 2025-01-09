@@ -1,9 +1,7 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Constants;
-import upsSP.Nastroje.GameState;
 import upsSP.Server.Connection;
-import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;

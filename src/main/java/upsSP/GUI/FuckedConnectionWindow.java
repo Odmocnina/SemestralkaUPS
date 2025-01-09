@@ -1,12 +1,9 @@
 package upsSP.GUI;
 
 import upsSP.Nastroje.Constants;
-import upsSP.Server.Connection;
-import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 public class FuckedConnectionWindow extends JPanel {
     public FuckedConnectionWindow(Window window) {
@@ -24,7 +21,7 @@ public class FuckedConnectionWindow extends JPanel {
         gridBorders.gridwidth = GridBagConstraints.REMAINDER;
 
         // Vytvoření nápisu
-        JLabel text = new JLabel("Něco se skurvilo...");
+        JLabel text = new JLabel("Máš problémy s Ynternty");
         text.setForeground(Color.WHITE); // Nastavení barvy textu
         text.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
 

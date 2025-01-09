@@ -21,6 +21,6 @@ public class Constants {
     public static final int NUMBER_OF_ROUNDS = 5;
     public static final int SIZE_OF_LETTER_IN_EVALUATION = 20;
     public static final Color BACKGROUND_COLOR = new Color(0, 102, 0);
-    public static final int NUMBER_OF_PINGS = 51;
+    public static final int NUMBER_OF_PINGS = 28;
     public static final int TIME_FOR_ONE_PING = 1000;
 }

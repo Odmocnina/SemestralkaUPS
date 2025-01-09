@@ -1,14 +1,11 @@
 package upsSP.Server;
 
-import upsSP.GUI.GameWindow;
 import upsSP.GUI.Informator;
-import upsSP.GUI.Window;
 import upsSP.Nastroje.Constants;
 import upsSP.Nastroje.GameState;
 import upsSP.Nastroje.States;
 import upsSP.Nastroje.Constants;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.locks.Lock;
@@ -60,13 +57,6 @@ public class Connection {
         out.println(message); //tedka jsem to zmenil z println na print nebo z posilani s lomeno n a bez, tedka bez \n
         out.flush();
         System.out.println("Posilam: " + message);
-        /*if (in != null) {
-            String messageRecieved = in.readLine();
-            if (messageRecieved != null) {
-                return messageRecieved;
-            }
-        }
-        System.out.println("Server didn't respond");*/
         return null;
     }
 
@@ -95,6 +85,23 @@ public class Connection {
         }
     }
 
+    public void closeConnectionForTry() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+            resetConnectionParametres();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setPort(int port) {
         this.port = port;
     }
@@ -103,48 +110,52 @@ public class Connection {
         this.adress = adress;
     }
 
-    public void setConfiguration(int port, String adress) throws IOException {
-        setPort(port);
-        setAdress(adress);
+    public int getTimeForSocket() {
+        return Constants.NUMBER_OF_PINGS * Constants.TIME_FOR_ONE_PING * 2;
+    }
+
+    public void tryToConnect() throws IOException {
         this.socket = new Socket(adress, port);
+        //socket.setSoTimeout(getTimeForSocket());
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         setIsConnected(true);
+    }
+
+    public void setConfiguration(int port, String adress, boolean startPinging) throws IOException {
+        setPort(port);
+        setAdress(adress);
+        tryToConnect();
         liseningMessegesFromServer();
         sendingPingToServer();
     }
 
     private void liseningMessegesFromServer() {
         isLisening = true;
-        System.out.println("Lisening...");
+        System.out.println("Zapinam posluchadlo");
         lisenThread = new Thread(() -> {
             while (getIsLisening()) {
                 //try {
                 String message;
                 try {
                     message = acceptMessage();
-                    /*} catch (IOException cs) {
-                        if (getIsLisening()) {
-                            cs.printStackTrace();
-                        } else {
-                            System.out.println("Poslochani bylo zastaveno");
-                        }
-                        break;
-                    }*/
                     if (message == null) {
                         continue;
                     }
+                    if (!message.startsWith("Mess:")) {
+                        System.out.println("Nevlaidni zprva prijata, odpojuji");
+                        GameState.getInstance().setScores(0,0, 0);
+                        Informator.getInstance(null).informAboutInvalidMessage();
+                        closeConnection();
+                        break;
+                    }
                     System.out.println("Prijata zprava: " + message);
-                    setTime(System.currentTimeMillis());
+                    //setTime(System.currentTimeMillis());
+                    if (message.startsWith("Mess:reconnect:OK:")) {
+                        Informator.getInstance(null).repairGame();
+                    }
                     if (message.startsWith("Mess:pong:")) {
-                        if (isConnected()) {
-                            setNumberOfPongs(getNumberOfPongs() + 1);
-                        } else {
-                            setIsConnected(true);
-                            setNumberOfPongs(getNumberOfPongs() + 1);
-                            //setConfiguration(port, adress);
-                            Informator.getInstance(null).repairGame();
-                        }
+                        setNumberOfPongs(getNumberOfPongs() + 1);
                     }
                     if (message.startsWith("Mess:opponentConnectionProblems:")) {
                         Informator.getInstance(null).informAboutOpponentsFuckedConnection(1);
@@ -159,6 +170,7 @@ public class Connection {
                         System.out.println("Nevlaidni zprva poslana, odpojuji");
                         GameState.getInstance().setScores(0,0, 0);
                         Informator.getInstance(null).informAboutInvalidMessage();
+                        closeConnection();
                     }
                     if (message.startsWith("Mess:logout:")) {
                         closeConnection();
@@ -185,12 +197,6 @@ public class Connection {
                     }
                     break;
                 }
-                    /*if (message.equals("Mess:břong")) {
-                        pong();
-                    }*/
-                //} //catch (IOException e) {
-                    //e.printStackTrace();
-                //}
             }
         });
         lisenThread.start();
@@ -198,34 +204,80 @@ public class Connection {
 
     public void sendingPingToServer() {
         isSending = true;
-        System.out.println("Sending ping...");
-        pingThread = new Thread(() -> {
-            while (isSending) {
-                try {
-                    System.out.println("Pocet pingu: " + getNumberOfPings() + " Pocet pongu: " + getNumberOfPongs());
-                    //long timeNow = System.currentTimeMillis();
-                    //if (Math.abs(getTime() - timeNow) > 50000 && !connected) {
-                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > Constants.NUMBER_OF_PINGS && !isConnected()) {
+        if (pingThread == null) {
+            System.out.println("Posilam ping");
+            pingThread = new Thread(() -> {
+                while (isSending) {
+                    try {
+                        System.out.println("Pocet pingu: " + getNumberOfPings() + " Pocet pongu: " + getNumberOfPongs());
+                        //long timeNow = System.currentTimeMillis();
+                        //if (Math.abs(getTime() - timeNow) > 50000 && !connected) {
+                    /*if (Math.abs(getNumberOfPongs() - getNumberOfPings()) > Constants.NUMBER_OF_PINGS && !isConnected()) {
                         GameState.getInstance().setScores(0, 0, 0);
                         closeConnection();
                         Informator.getInstance(null).informAboutTimeout();
                         break;
+                    }*/
+                        //if (Math.abs(getTime() - timeNow) > 5000 && isConnected() == true) { //pokud jeden ping ne tak spatny
+                        if (Math.abs(getNumberOfPongs() - getNumberOfPings()) >= 2 && isConnected() == true) { //pokud jeden ping ne tak spatny
+                            System.out.println("Problem s spojenim");
+                            setIsConnected(false);
+                            Informator.getInstance(null).informAboutFuckedConnection();
+                            boolean reconnected = reconnect();
+                            if (reconnected) {
+                                setIsConnected(true);
+                            } else {
+                                GameState.getInstance().setScores(0, 0, 0);
+                                closeConnection();
+                                Informator.getInstance(null).informAboutTimeout();
+                                break;
+                            }
+                        } else if (true) {
+                            setNumberOfPings(getNumberOfPings() + 1);
+                            sendMessage("Mess:ping:" + clientId + ":");
+                            sleep(Constants.TIME_FOR_ONE_PING);
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    //if (Math.abs(getTime() - timeNow) > 5000 && isConnected() == true) { //pokud jeden ping ne tak spatny
-                    if (Math.abs(getNumberOfPongs() - getNumberOfPings()) >= 1 && isConnected() == true) { //pokud jeden ping ne tak spatny
-                        System.out.println("Problem s spojenim");
-                        setIsConnected(false);
-                        Informator.getInstance(null).informAboutFuckedConnection();
-                    }
-                    setNumberOfPings(getNumberOfPings() + 1);
-                    sendMessage("Mess:ping:" + clientId +":");
-                    sleep(Constants.TIME_FOR_ONE_PING);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
                 }
+            });
+            pingThread.start();
+        }
+    }
+
+    boolean reconnect() {
+        int attempts = 0;
+        boolean navrat = false;
+        boolean reconnecting = true;
+        while (reconnecting) {
+            try {
+                System.out.println("Zkousim se znovu pripjit. Pokus (" + (attempts + 1) + ")");
+                closeConnection(); // Ujistěte se, že staré spojení je uzavřeno
+                //setConfiguration(port, adress); // Znovu nastavte konfiguraci a připojte se
+                setConfiguration(port, adress, false);
+                System.out.println("Spojení bylo obnoveno.");
+                reconnecting = false; // Spojení bylo úspěšné
+                navrat = true;
+                setNumberOfPings(0);
+                setNumberOfPongs(0);
+                sendMessage("Mess:reconnect:" + clientId + ":");
+            } catch (IOException e) {
+                attempts = attempts + 1;
+                System.out.println("Nepodařilo se připojit. Pokus " + attempts + ".");
+                try {
+                    sleep(800); // pockej pred dalsim pokusem at se to uplne neposere
+                } catch (InterruptedException ignored) {}
             }
-        });
-        pingThread.start();
+
+            // Zkontrolujte časový limit (např. 50 sekund)
+            if (attempts >= Constants.NUMBER_OF_PINGS) {
+                System.out.println("Vypršel časový limit pro reconnect. Spojení nelze obnovit.");
+                reconnecting = false; // Ukončení pokusů
+                //navrat = true;
+            }
+        }
+        return navrat;
     }
 
     private void pong() throws IOException {
@@ -235,6 +287,10 @@ public class Connection {
     private void stopLisening() {
         setIsLisening(false);
         //sleep();
+    }
+
+    public void setLiseningToTrue() {
+        setIsLisening(true);
     }
     private void  stopPinging() {
         isSending = false;

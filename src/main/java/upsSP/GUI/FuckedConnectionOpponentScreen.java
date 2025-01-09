@@ -21,7 +21,7 @@ public class FuckedConnectionOpponentScreen extends JPanel {
         gridBorders.gridwidth = GridBagConstraints.REMAINDER;
 
         // Vytvoření nápisu
-        JLabel text = new JLabel("Tvýmu opponentovi se něco se skurvilo...");
+        JLabel text = new JLabel("Tvůj opponent má problém s Ynternety");
         text.setForeground(Color.WHITE); // Nastavení barvy textu
         text.setFont(new Font("Arial", Font.BOLD, 24)); // Nastavení většího a tučného písma
 

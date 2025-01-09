@@ -4,7 +4,6 @@ import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.VolbyTahu.*;
 import upsSP.Nastroje.GameState;
-import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,8 +112,8 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
                 try {
                     Connection connection = Connection.getInstance();
                     connection.sendMessage("Mess:turn:" + turnValue + ":");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                } catch (IOException e2) {
+                    throw new RuntimeException(e2);
                 }
                 GameEvaluationScreen.valueTurn = turnValue;
                 window.zobrazHru("afterPlay");

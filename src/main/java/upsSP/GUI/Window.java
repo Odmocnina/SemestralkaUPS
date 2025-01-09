@@ -8,13 +8,31 @@ import java.awt.*;
 
 import static upsSP.Nastroje.Constants.*;
 
+/************************************************************
+ * Trida reprezentujici hlavni okno aplikace
+ * s funkcionalitou pro spravu ruznych obrazovek
+ *
+ * @author  Michael Hladky
+ * @version 1.00.00
+ */
 public class Window extends JFrame {
+
+    /**Layout pro spravu jednotlivych obrazovek**/
     private CardLayout widnowList;
+
+    /**Hlavni panel obsahujici vsechny obrazovky**/
     private JPanel mainWindow;
 
+    /**Obrazovka pro vyhodnoceni hry**/
     GameEvaluationScreen gameEvaluation;
+
+    /**Obrazovka samotne hry**/
     GameWindow game;
 
+    /**
+     * Konstruktor tridy Window
+     * Inicializuje hlavni okno a pridava jednotlive obrazovky
+     */
     public Window() {
         Informator.getInstance(this); //setnuti informatora
         widnowList = new CardLayout();
@@ -47,15 +65,29 @@ public class Window extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Nastavi parametry hry na zaklade zpravy
+     * @param message zprava obsahujici stav hry
+     */
     public void setParamaters(String message) {
         gameEvaluation.setGameState(message);
     }
 
+
+    /**
+     * Zobrazi obrazovku hry podle zadane sceny
+     * @param sceneName nazev sceny, kterou chceme zobrazit
+     */
     public void zobrazHru(String sceneName) {
         GameState.getInstance().setState(StringToState(sceneName));
         widnowList.show(mainWindow, sceneName);
     }
 
+    /**
+     * Prevadi retezec na stav hry
+     * @param state retezec reprezentujici stav
+     * @return stav hry odpovidajici retezci
+     */
     public States StringToState(String state) {
         switch (state) {
             case "login":
@@ -74,6 +106,11 @@ public class Window extends JFrame {
         return null;
     }
 
+    /**
+     * Prevadi stav hry na retezec
+     * @param state stav hry
+     * @return retezec odpovidajici stavu hry
+     */
     public String StateToString(States state) {
         if (state == null) {
             return null;
@@ -96,6 +133,7 @@ public class Window extends JFrame {
         }
     }
 
+    /**Aktualizuje popisky ve hre**/
     public void aktializujLably() {
         game.updateLabes();
     }

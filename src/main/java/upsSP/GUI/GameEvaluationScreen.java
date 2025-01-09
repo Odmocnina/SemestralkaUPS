@@ -3,7 +3,6 @@ package upsSP.GUI;
 import upsSP.Nastroje.Constants;
 import upsSP.Server.Connection;
 import upsSP.Nastroje.GameState;
-import upsSP.Nastroje.States;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,11 +64,6 @@ public class GameEvaluationScreen extends JPanel implements Connection.IListener
         nextRoundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*try {
-                    Connection.getInstance().sendMessage("Mess:ready:" + Connection.getInstance().clientId + ":\n");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }*/
                 window.aktializujLably();
                 if (GameState.getInstance().gameInProgress) {
                     window.zobrazHru("game");
@@ -110,23 +104,23 @@ public class GameEvaluationScreen extends JPanel implements Connection.IListener
 
     public static void aktualizujLably() {
         //if (opponentTurnLabel != null) {
-            turnLabel.setText("Zvolil jste: " + ziskejNazevZHodnoty(valueTurn));
-            opponentTurnLabel.setText("Protivník zvolil: " + ziskejNazevZHodnoty(opponentTurnValue));
-            resultRoundLabel.setText("Výsledek kola: " + roundResult);
-            if (GameState.getInstance().numberOfWonRounds == Constants.NUMBER_OF_ROUNDS) {
-                gameResultLabel.setText("Výsledek hry: Vyhrál si");
-                nextRoundButton.setText("Zpátky do fronty");
-                GameState.getInstance().gameInProgress = false;
-                GameState.getInstance().setScores(0, 0, 0);
-            } else if (GameState.getInstance().numberOfLostRounds == Constants.NUMBER_OF_ROUNDS) {
-                gameResultLabel.setText("Výsledek hry: Prohrál si");
-                //dalsiKoloButton.setText("Zpátky na login");
-                nextRoundButton.setText("Zpátky do fronty");
-                GameState.getInstance().gameInProgress = false;
-                GameState.getInstance().setScores(0, 0, 0);
-            } else {
-                gameResultLabel.setText("Výsledek hry: V průběhu hry");
-            }
+        turnLabel.setText("Zvolil jste: " + ziskejNazevZHodnoty(valueTurn));
+        opponentTurnLabel.setText("Protivník zvolil: " + ziskejNazevZHodnoty(opponentTurnValue));
+        resultRoundLabel.setText("Výsledek kola: " + roundResult);
+        if (GameState.getInstance().numberOfWonRounds == Constants.NUMBER_OF_ROUNDS) {
+            gameResultLabel.setText("Výsledek hry: Vyhrál si");
+            nextRoundButton.setText("Zpátky do fronty");
+            GameState.getInstance().gameInProgress = false;
+            GameState.getInstance().setScores(0, 0, 0);
+        } else if (GameState.getInstance().numberOfLostRounds == Constants.NUMBER_OF_ROUNDS) {
+            gameResultLabel.setText("Výsledek hry: Prohrál si");
+            //dalsiKoloButton.setText("Zpátky na login");
+            nextRoundButton.setText("Zpátky do fronty");
+            GameState.getInstance().gameInProgress = false;
+            GameState.getInstance().setScores(0, 0, 0);
+        } else {
+            gameResultLabel.setText("Výsledek hry: V průběhu hry");
+        }
         //}
     }
 
