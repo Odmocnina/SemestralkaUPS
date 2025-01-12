@@ -39,6 +39,7 @@ public class Connection {
     int numberOfPongs = 0;
     Lock lock = new ReentrantLock();
     boolean gameStopped = false;
+    public boolean[] repeteMessagesSend = {false, false, false, false, false};
 
     // Soukromý konstruktor
     private Connection() {
@@ -153,7 +154,9 @@ public class Connection {
                     //setTime(System.currentTimeMillis());
                     if (message.startsWith("Mess:reconnect:OK:")) {
                         Informator.getInstance(null).repairGame();
+                        sendNotSendedMessagess();
                     }
+                    processOKMessage(message);
                     if (message.startsWith("Mess:pong:")) {
                         setNumberOfPongs(getNumberOfPongs() + 1);
                     }
@@ -204,7 +207,7 @@ public class Connection {
 
     public void sendingPingToServer() {
         isSending = true;
-        if (pingThread == null) {
+        if (pingThread == null) {  //at se nezacne dalsi ping thread pri reconnectu
             System.out.println("Posilam ping");
             pingThread = new Thread(() -> {
                 while (isSending) {
@@ -426,6 +429,14 @@ public class Connection {
         }
     }
 
+    public void turnSend() {
+        repeteMessagesSend[0] = true;
+    }
+
+    public void nextRoundSend() {
+        repeteMessagesSend[0] = true;
+    }
+
     public void setIsLisening(boolean isLisening) {
         lock.lock();
         try {
@@ -439,6 +450,133 @@ public class Connection {
         setNumberOfPings(0);
         setNumberOfPongs(0);
         setIsConnected(false);
+    }
+
+    public void setLoginSend(boolean turnSend) {
+        lock.lock();
+        try {
+            repeteMessagesSend[0] = turnSend;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean getLoginSend() {
+        lock.lock();
+        try {
+            return repeteMessagesSend[0];
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setLogoutSend(boolean turnSend) {
+        lock.lock();
+        try {
+            repeteMessagesSend[1] = turnSend;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean getLogoutSend() {
+        lock.lock();
+        try {
+            return repeteMessagesSend[1];
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setTurnSend(boolean turnSend) {
+        lock.lock();
+        try {
+            repeteMessagesSend[2] = turnSend;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean getTurnSend() {
+        lock.lock();
+        try {
+            return repeteMessagesSend[2];
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setNextRoundSend(boolean turnSend) {
+        lock.lock();
+        try {
+            repeteMessagesSend[3] = turnSend;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean getNextRoundSend() {
+        lock.lock();
+        try {
+            return repeteMessagesSend[3];
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setGameSend(boolean turnSend) {
+        lock.lock();
+        try {
+            repeteMessagesSend[4] = turnSend;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean getGameSend() {
+        lock.lock();
+        try {
+            return repeteMessagesSend[4];
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void sendNotSendedMessagess() throws IOException {
+        if (getLoginSend()) {
+            sendMessage("Mess:login:" + GameState.getInstance().turnValue + ":");
+            setLoginSend(false);
+        }
+        if (getLogoutSend()) {
+            sendMessage("Mess:login:" + GameState.getInstance().turnValue + ":");
+            setLogoutSend(false);
+        }
+        if (getNextRoundSend()) {
+            sendMessage("Mess:readyForNextRound:" + clientId + ":");
+            setNextRoundSend(false);
+        }
+        if (getTurnSend()) {
+            sendMessage("Mess:turn:" + GameState.getInstance().turnValue + ":");
+            setTurnSend(false);
+        }
+        if (getGameSend()) {
+            sendMessage("Mess:game:" + Connection.getInstance().clientId + ":");
+            setTurnSend(false);
+        }
+    }
+
+    public void processOKMessage(String message) {
+        if (message.startsWith("Mess:login:")) {
+            setLoginSend(false);
+        } else if (message.startsWith("Mess:logout:")) {
+            setLogoutSend(false);
+        } else if (message.startsWith("Mess:turn:OK:")) {
+            setTurnSend(false);
+        } else if (message.startsWith("Mess:readyForNextRound:OK:")) {
+            setNextRoundSend(false);
+        } else if (message.startsWith("Mess:game:OK:")) {
+            setGameSend(false);
+        }
     }
 
 }

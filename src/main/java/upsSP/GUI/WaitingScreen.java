@@ -59,6 +59,7 @@ public class WaitingScreen extends JPanel implements Connection.IListenerInQueue
                 try {
                     Connection connection = Connection.getInstance();
                     String responce = connection.sendMessage("Mess:logout:" + connection.clientId + ":");
+                    connection.setLogoutSend(true);
                     //System.out.println("Odpoved serveru: " + responce);
                     //Connection.getInstance().closeConnection();
                     window.zobrazHru("help");
@@ -73,14 +74,12 @@ public class WaitingScreen extends JPanel implements Connection.IListenerInQueue
     @Override
     public void onMessage(String message) {
         if (message.startsWith("Mess:gameBegin:")) {
-            System.out.println("Zprava identifikovana jako start hry");
             Window window = (Window) SwingUtilities.getWindowAncestor(this);
             window.zobrazHru("game");
             GameEvaluationScreen.nextRoundButton.setText("Další kolo");
             GameState.getInstance().gameInProgress = true;
         }
         if (message.startsWith("Mess:login:")) {
-            System.out.println("Zprava identifikovana jako login");
             String id = message.split(":")[2];
             try {
                 Connection.getInstance().clientId = Integer.parseInt(id);
@@ -89,7 +88,6 @@ public class WaitingScreen extends JPanel implements Connection.IListenerInQueue
             }
         }
         if (message.startsWith("Mess:logout:")) {
-            System.out.println("Zprava identifikovana jako logout");
             try {
                 Connection.getInstance().clientId = -1;
             } catch (IOException e) {

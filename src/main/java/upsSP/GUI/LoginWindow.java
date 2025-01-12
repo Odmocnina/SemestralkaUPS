@@ -108,6 +108,7 @@ public class LoginWindow extends JPanel {
                                     Connection connection = Connection.getInstance();
                                     connection.setConfiguration(Integer.parseInt(portTextField.getText()), ipTextField.getText(), true);
                                     connection.sendMessage("Mess:login:" + jmenoTextField.getText() + ":");
+                                    connection.setLoginSend(true);
                                 } catch (IOException e3) {
                                     JOptionPane.showMessageDialog(null,
                                             "Nelze se připojit k serveru. Zkontrolujte IP adresu a port.",

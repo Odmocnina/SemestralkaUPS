@@ -112,10 +112,12 @@ public class GameWindow extends JPanel implements Connection.IListenerInGame {
                 try {
                     Connection connection = Connection.getInstance();
                     connection.sendMessage("Mess:turn:" + turnValue + ":");
+                    GameEvaluationScreen.valueTurn = turnValue;
+                    connection.setTurnSend(true);
                 } catch (IOException e2) {
                     throw new RuntimeException(e2);
                 }
-                GameEvaluationScreen.valueTurn = turnValue;
+                GameState.getInstance().turnValue = turnValue;
                 window.zobrazHru("afterPlay");
             }
         });

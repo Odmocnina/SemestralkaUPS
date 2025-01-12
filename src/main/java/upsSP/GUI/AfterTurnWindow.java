@@ -44,12 +44,10 @@ public class AfterTurnWindow extends JPanel implements Connection.IListenerAfter
     @Override
     public void onMessage(String message) {
         if (message.startsWith("Mess:gameResult:")) {
-            System.out.println("Zprava identifikovana jako vysledek hry");
             GameEvaluationScreen.setGameState(message);
             GameEvaluationScreen.aktualizujLably();
         }
         if (message.startsWith("Mess:bothPlayerTurn:")) {
-            System.out.println("Zprava identifikovana jako oba hraci hrali");
             Window window = (Window) SwingUtilities.getWindowAncestor(this);
             window.zobrazHru("gameJudgement");
         }

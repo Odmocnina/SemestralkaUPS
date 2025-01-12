@@ -11,6 +11,7 @@ public class GameState {
 
     static GameState instance;
     public States stateOfGame;
+    public int turnValue;
     private GameState() {
 
     }
